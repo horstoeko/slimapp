@@ -26,4 +26,10 @@ $middleware($app);
 $routes = require __DIR__ . '/../etc/routes.php';
 $routes($app);
 
+/** @var bool $displayErrorDetails */
+$displayErrorDetails = $container->get('settings')['displayErrorDetails'] ?? false;
+
+$app->addRoutingMiddleware();
+$app->addErrorMiddleware($displayErrorDetails, true, true, $logger);
+
 $app->run();

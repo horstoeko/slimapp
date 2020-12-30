@@ -42,10 +42,11 @@
         "twig/intl-extra": "*",
         "twig/html-extra": "*",
         "twig/markdown-extra": "*",
-        "symfony/twig-bridge": "*",
         "league/html-to-markdown": "*",
         "symfony/translation": "*",
-        "symfony/twig-bridge": "*"
+        "symfony/twig-bridge": "*",
+        "illuminate/database": "^8",
+        "lulco/phoenix": "^1"
     },
     "require-dev": {
         "clean/phpdoc-md": "^0",

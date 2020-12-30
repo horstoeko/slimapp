@@ -22,6 +22,7 @@ use Symfony\Bridge\Twig\Extension\TranslationExtension as SymfonyTwigBridgeTrans
 use Twig\RuntimeLoader\RuntimeLoaderInterface as TwigRuntimeLoaderInterface;
 use Twig\Extra\Markdown\DefaultMarkdown as TwigDefaultMarkdown;
 use Twig\Extra\Markdown\MarkdownRuntime as TwigMarkdownRuntime;
+use Illuminate\Database\Capsule\Manager as Capsule;
 
 return function (ContainerBuilder $containerBuilder) {
     $containerBuilder->addDefinitions([
@@ -118,6 +119,30 @@ return function (ContainerBuilder $containerBuilder) {
             });
 
             return $view;
-        }
+        },
+
+        Capsule::class => function (ContainerInterface $c) {
+            $settings = $c->get('settings');
+            $dbSettings = $settings['db'];
+
+            $capsule = new Capsule();
+
+            $capsule->addConnection([
+                'driver'    => $dbSettings['driver'],
+                'host'      => $dbSettings['host'],
+                'database'  => $dbSettings['database'],
+                'username'  => $dbSettings['username'],
+                'password'  => $dbSettings['password'],
+                'charset'   => $dbSettings['charset'],
+                'collation' => $dbSettings['collation'],
+                'prefix'    => $dbSettings['prefix'] != '' ? $dbSettings['prefix'] : '',
+                'port'      => $dbSettings['port']
+            ]);
+
+            $capsule->setAsGlobal();
+            $capsule->bootEloquent();
+
+            return $capsule;
+        },
     ]);
 };
