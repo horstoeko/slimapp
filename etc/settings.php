@@ -17,6 +17,14 @@ return function (ContainerBuilder $containerBuilder) {
             'translator' => [
                 'defaultlanguagecode' => 'de_DE',
             ],
+            'twig' => [
+                'strict_variables' => false,
+                'auto_reload' => true,
+                'debug' => true,
+                'optimizations' => -1,
+                'templatesettings' => [],
+                'cachemode' => 1,
+            ],
         ],
     ]);
 };

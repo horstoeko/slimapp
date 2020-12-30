@@ -9,10 +9,10 @@ require __DIR__ . '/../vendor/autoload.php';
 
 $containerBuilder = new ContainerBuilder();
 
-$settings = require __DIR__ . '/../app/settings.php';
+$settings = require __DIR__ . '/../etc/settings.php';
 $settings($containerBuilder);
 
-$services = require __DIR__ . '/../app/services.php';
+$services = require __DIR__ . '/../etc/services.php';
 $services($containerBuilder);
 
 $container = $containerBuilder->build();
@@ -20,10 +20,10 @@ $container = $containerBuilder->build();
 AppFactory::setContainer($container);
 $app = AppFactory::create();
 
-$middleware = require __DIR__ . '/../app/middleware.php';
+$middleware = require __DIR__ . '/../etc/middleware.php';
 $middleware($app);
 
-$routes = require __DIR__ . '/../app/routes.php';
+$routes = require __DIR__ . '/../etc/routes.php';
 $routes($app);
 
 $app->run();
