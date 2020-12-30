@@ -1,6 +1,11 @@
 {
     "name": "horstoeko/slimapp",
-    "keywords": ["slim","framework","skeleton","app"],
+    "keywords": [
+        "slim",
+        "framework",
+        "skeleton",
+        "app"
+    ],
     "description": "Simple slim framework based application",
     "homepage": "https://github.com/horstoeko/slimapp",
     "type": "package",
@@ -63,6 +68,10 @@
     "scripts": {
         "tests": "./vendor/bin/phpunit ./tests/",
         "phpcs": "./vendor/bin/phpcs --standard=./build/phpcsrules.xml --extensions=php --ignore=autoload.php ./src ./tests",
-        "phpstan": "./vendor/bin/phpstan analyze -c ./build/phpstan.neon --autoload-file=vendor/autoload.php --no-interaction --no-progress --error-format=table"
+        "phpstan": "./vendor/bin/phpstan analyze -c ./build/phpstan.neon --autoload-file=vendor/autoload.php --no-interaction --no-progress --error-format=table",
+        "post-create-project-cmd": [
+            "php -r \"mkdir('./var');\"",
+            "php -r \"mkdir('./var/twig');\""
+        ]
     }
 }
