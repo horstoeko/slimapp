@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace horstoeko\slimapp\action;
 
+use horstoeko\slimapp\twig\SlimAppTwig;
+use Illuminate\Database\Capsule\Manager as Capsule;
 use Psr\Log\LoggerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
-use horstoeko\slimapp\twig\SlimAppTwig;
 
 abstract class SlimAppHtmlAction extends SlimAppBaseAction
 {
@@ -19,9 +20,9 @@ abstract class SlimAppHtmlAction extends SlimAppBaseAction
      * @param LoggerInterface $logger
      * @param SlimAppTwig $twig
      */
-    public function __construct(LoggerInterface $logger, SlimAppTwig $twig)
+    public function __construct(LoggerInterface $logger, Capsule $capsule, SlimAppTwig $twig)
     {
-        parent::__construct($logger);
+        parent::__construct($logger, $capsule);
 
         $this->twig = $twig;
     }

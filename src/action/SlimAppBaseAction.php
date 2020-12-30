@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace horstoeko\slimapp\action;
 
+use Illuminate\Database\Capsule\Manager as Capsule;
 use Psr\Log\LoggerInterface;
-use Slim\Exception\HttpBadRequestException;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Slim\Exception\HttpBadRequestException;
 
 abstract class SlimAppBaseAction
 {
@@ -15,6 +16,11 @@ abstract class SlimAppBaseAction
      * @var LoggerInterface
      */
     protected $logger;
+
+    /**
+     * @var Capsule
+     */
+    protected $capsule;
 
     /**
      * @var Request
@@ -33,10 +39,12 @@ abstract class SlimAppBaseAction
 
     /**
      * @param LoggerInterface $logger
+     * @param Capsule $capsule
      */
-    public function __construct(LoggerInterface $logger)
+    public function __construct(LoggerInterface $logger, Capsule $capsule)
     {
         $this->logger = $logger;
+        $this->capsule = $capsule;
     }
 
     /**
