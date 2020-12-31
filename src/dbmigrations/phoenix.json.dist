@@ -1,0 +1,25 @@
+{
+    "log_table_name": "sys_phoenix_log",
+    "migration_dirs": {
+        "first": "%%ACTUAL_DIR%%/var/phoenix"
+    },
+    "environments": {
+        "local": {
+            "adapter": "mysql",
+            "host": "localhost",
+            "username": "user",
+            "password": "secret",
+            "db_name": "db",
+            "charset": "utf8"
+        },
+        "production": {
+            "adapter": "mysql",
+            "host": "localhost",
+            "username": "user",
+            "password": "secret",
+            "db_name": "db",
+            "charset": "utf8"
+        }
+    },
+    "default_environment": "local"
+}

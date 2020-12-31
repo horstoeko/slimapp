@@ -88,3 +88,4 @@ _backup*
 /tests/*.xml
 /app/*
 /var/
+phoenix.json
