@@ -39,7 +39,7 @@ abstract class SlimAppBaseAction
 
     /**
      * @param LoggerInterface $logger
-     * @param Capsule $capsule
+     * @param Capsule         $capsule
      */
     public function __construct(LoggerInterface $logger, Capsule $capsule)
     {
@@ -48,9 +48,9 @@ abstract class SlimAppBaseAction
     }
 
     /**
-     * @param Request  $request
-     * @param Response $response
-     * @param array    $args
+     * @param  Request  $request
+     * @param  Response $response
+     * @param  array    $args
      * @return Response
      * @throws HttpNotFoundException
      * @throws HttpBadRequestException

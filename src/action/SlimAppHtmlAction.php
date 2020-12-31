@@ -18,7 +18,7 @@ abstract class SlimAppHtmlAction extends SlimAppBaseAction
 
     /**
      * @param LoggerInterface $logger
-     * @param SlimAppTwig $twig
+     * @param SlimAppTwig     $twig
      */
     public function __construct(LoggerInterface $logger, Capsule $capsule, SlimAppTwig $twig)
     {

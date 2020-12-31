@@ -40,10 +40,12 @@ class SlimAppTwigApcuCache implements TwigCacheInterface
      */
     public function write(string $key, string $content): void
     {
-        apcu_store($key, [
+        apcu_store(
+            $key, [
             'data' => 'data://text/plain;base64,' . base64_encode($content),
             'timestamp' => time(),
-        ]);
+            ]
+        );
     }
 
     /**

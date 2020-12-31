@@ -64,8 +64,8 @@ class SlimAppTwig implements ArrayAccess
     /**
      * Fetch rendered template
      *
-     * @param  string $template Template pathname relative to templates directory
-     * @param  array  $data     Associative array of template variables
+     * @param string $template Template pathname relative to templates directory
+     * @param array  $data     Associative array of template variables
      *
      * @throws LoaderError  When the template cannot be found
      * @throws SyntaxError  When an error occurred during compilation
@@ -83,8 +83,8 @@ class SlimAppTwig implements ArrayAccess
     /**
      * Fetch rendered string
      *
-     * @param  string $string String
-     * @param  array  $data   Associative array of template variables
+     * @param string $string String
+     * @param array  $data   Associative array of template variables
      *
      * @return string
      */
@@ -100,7 +100,7 @@ class SlimAppTwig implements ArrayAccess
      *
      * @param  ResponseInterface $response
      * @param  string            $template Template pathname relative to templates directory
-     * @param  array             $data Associative array of template variables
+     * @param  array             $data     Associative array of template variables
      * @return ResponseInterface
      */
     public function render(ResponseInterface $response, string $template, array $data = [])
@@ -113,7 +113,7 @@ class SlimAppTwig implements ArrayAccess
     /**
      * Create a loader with the given path
      *
-     * @param array $paths
+     * @param  array $paths
      * @return FilesystemLoader
      */
     private function createLoader(array $paths)
@@ -154,7 +154,7 @@ class SlimAppTwig implements ArrayAccess
     /**
      * Does this collection have a given key?
      *
-     * @param  string $key The data key
+     * @param string $key The data key
      *
      * @return bool
      */
@@ -219,7 +219,7 @@ class SlimAppTwig implements ArrayAccess
     /**
      * Add template path(s)
      *
-     * @param string[] $path
+     * @param  string[] $path
      * @return void
      */
     public function addTemplatePath($path)
@@ -238,7 +238,7 @@ class SlimAppTwig implements ArrayAccess
     /**
      * Checks if a template exists
      *
-     * @param string $name
+     * @param  string $name
      * @return bool
      */
     public function exists($name)
@@ -249,7 +249,7 @@ class SlimAppTwig implements ArrayAccess
     /**
      * Checks if any of the template in $names exists
      *
-     * @param array $names
+     * @param  array $names
      * @return bool
      */
     public function existsAny(array $names)
@@ -282,8 +282,8 @@ class SlimAppTwig implements ArrayAccess
     /**
      * Fetch a template content
      *
-     * @param array $templates
-     * @param array $data
+     * @param  array $templates
+     * @param  array $data
      * @return string
      */
     public function fetchExtended(array $templates, $data = [])
@@ -300,7 +300,7 @@ class SlimAppTwig implements ArrayAccess
     /**
      * Loader for runtimes
      *
-     * @param TwigRuntimeLoaderInterface $loader
+     * @param  TwigRuntimeLoaderInterface $loader
      * @return void
      */
     public function addRuntimeLoader(TwigRuntimeLoaderInterface $loader)

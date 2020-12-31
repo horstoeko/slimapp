@@ -88,4 +88,3 @@ _backup*
 /tests/*.xml
 /app/*
 /var/
-!/app/.keep

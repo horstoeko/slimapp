@@ -51,7 +51,8 @@
         "symfony/translation": "*",
         "symfony/twig-bridge": "*",
         "illuminate/database": "^8",
-        "lulco/phoenix": "^1"
+        "lulco/phoenix": "^1",
+        "bryanjhv/slim-session": "^4"
     },
     "require-dev": {
         "clean/phpdoc-md": "^0",
@@ -70,8 +71,10 @@
         "phpcs": "./vendor/bin/phpcs --standard=./build/phpcsrules.xml --extensions=php --ignore=autoload.php ./src ./tests",
         "phpstan": "./vendor/bin/phpstan analyze -c ./build/phpstan.neon --autoload-file=vendor/autoload.php --no-interaction --no-progress --error-format=table",
         "post-create-project-cmd": [
-            "php -r \"mkdir('./var');\"",
-            "php -r \"mkdir('./var/twig');\""
+            "php -r \"@mkdir('./var');\"",
+            "php -r \"@mkdir('./var/twig');\"",
+            "php -r \"@mkdir('./app');\"",
+            "php -r \"@mkdir('./etc');\""
         ]
     }
 }
