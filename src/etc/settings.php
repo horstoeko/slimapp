@@ -22,5 +22,14 @@ return [
         'optimizations' => -1,
         'templatesettings' => [],
         'cachemode' => 1,
-    ]
+    ],
+    'locale' => [
+        'availablelanguagecodes' => ['de_DE', 'en_GB'],
+        'defaultlanguagecode' => 'de_DE',
+        'dosetlocale' => true,
+        'overridelanguagecode' => null,
+        'strictmatchlanguagecode' => false,
+        'languagelocalemaps' => ['de_DE' => 'de_DE.utf8'],
+        'unknownlanguagecodemaps' => ['en_EN' => 'en_GB'],
+    ],
 ];

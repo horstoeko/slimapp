@@ -52,7 +52,8 @@
         "symfony/twig-bridge": "*",
         "illuminate/database": "^8",
         "lulco/phoenix": "^1",
-        "bryanjhv/slim-session": "^4"
+        "bryanjhv/slim-session": "^4",
+        "horstoeko/stringmanagement": "^1"
     },
     "require-dev": {
         "clean/phpdoc-md": "^0",

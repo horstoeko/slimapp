@@ -23,6 +23,7 @@ use Twig\Extra\Markdown\DefaultMarkdown as TwigDefaultMarkdown;
 use Twig\Extra\Markdown\MarkdownRuntime as TwigMarkdownRuntime;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Slim\Middleware\Session as SessionMiddleware;
+use horstoeko\slimapp\middleware\SlimAppMiddlewareLocale;
 
 return [
     LoggerInterface::class => function (ContainerInterface $c) {
@@ -63,28 +64,28 @@ return [
         $twigSettings = $settings['twig'];
 
         switch ($twigSettings["cachemode"] ?? 0) {
-        case 1:
-            $cache = __DIR__ . "/../../var/twig";
-            if (!is_dir($cache) || !is_writeable($cache)) {
+            case 1:
+                $cache = __DIR__ . "/../../var/twig";
+                if (!is_dir($cache) || !is_writeable($cache)) {
+                    $cache = false;
+                }
+                break;
+            case 2:
+                if (!extension_loaded('apc') || !ini_get('apc.enabled') || !ini_get('allow_url_include')) {
+                    $cache = false;
+                } else {
+                    $cache = new SlimAppTwigApcCache($twigSettings["cachenamespace"] ?? "slimapp");
+                }
+                break;
+            case 3:
+                if (!extension_loaded('apcu') || !ini_get('apc.enabled') || !ini_get('allow_url_include')) {
+                    $cache = false;
+                } else {
+                    $cache = new SlimAppTwigApcuCache($twigSettings["cachenamespace"] ?? "slimapp");
+                }
+                break;
+            default:
                 $cache = false;
-            }
-            break;
-        case 2:
-            if (!extension_loaded('apc') || !ini_get('apc.enabled') || !ini_get('allow_url_include')) {
-                $cache = false;
-            } else {
-                $cache = new SlimAppTwigApcCache($twigSettings["cachenamespace"] ?? "slimapp");
-            }
-            break;
-        case 3:
-            if (!extension_loaded('apcu') || !ini_get('apc.enabled') || !ini_get('allow_url_include')) {
-                $cache = false;
-            } else {
-                $cache = new SlimAppTwigApcuCache($twigSettings["cachenamespace"] ?? "slimapp");
-            }
-            break;
-        default:
-            $cache = false;
         }
 
         $directories = [];
@@ -135,8 +136,7 @@ return [
 
         $capsule = new Capsule();
 
-        $capsule->addConnection(
-            [
+        $capsule->addConnection([
             'driver'    => $dbSettings['driver'],
             'host'      => $dbSettings['host'],
             'database'  => $dbSettings['database'],
@@ -146,12 +146,20 @@ return [
             'collation' => $dbSettings['collation'],
             'prefix'    => $dbSettings['prefix'] != '' ? $dbSettings['prefix'] : '',
             'port'      => $dbSettings['port']
-            ]
-        );
+        ]);
 
         $capsule->setAsGlobal();
         $capsule->bootEloquent();
 
         return $capsule;
     },
+
+    SlimAppMiddlewareLocale::class => function (ContainerInterface $c, SymfonyTranslator $translator) {
+        $settings = $c->get('settings');
+        $localeSettings = $settings['locale'];
+
+        $localeMiddleware = new SlimAppMiddlewareLocale($translator, $localeSettings);
+
+        return $localeMiddleware;
+    }
 ];
