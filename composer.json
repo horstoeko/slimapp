@@ -74,7 +74,8 @@
             "php -r \"@mkdir('./var');\"",
             "php -r \"@mkdir('./var/twig');\"",
             "php -r \"@mkdir('./app');\"",
-            "php -r \"@mkdir('./etc');\""
+            "php -r \"@mkdir('./etc');\"",
+            "php -r \"@mkdir('./logs');\""
         ]
     }
 }
