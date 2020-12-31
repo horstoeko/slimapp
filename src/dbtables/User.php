@@ -9,6 +9,13 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
 class User extends Eloquent
 {
     /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var boolean
+     */
+    public $timestamps = false;
+
+    /**
      * The table associated with the model.
      *
      * @var string

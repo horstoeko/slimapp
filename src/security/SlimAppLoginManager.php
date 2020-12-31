@@ -125,4 +125,86 @@ class SlimAppLoginManager
     {
         return $this->sessionHelper->get(self::SESSION_LOGINLASTNAME, "");
     }
+
+    /**
+     * Create a new user
+     *
+     * @param string $username
+     * @param string $password
+     * @param string $firstname
+     * @param string $lastname
+     * @param string $email
+     * @return integer
+     */
+    public function createUser(string $username, string $password, string $firstname, string $lastname, string $email): int
+    {
+        $userData = UserTable::where("username", "=", $username)->first();
+
+        if ($userData) {
+            return (int)$userData->id;
+        }
+
+        $dbValues = [
+            'username' => $username,
+            'password' => $password,
+            'firstname' => $firstname,
+            'lastname' => $lastname,
+            'email' => $email,
+        ];
+
+        UserTable::create($dbValues);
+
+        $userData = UserTable::where("username", "=", $username)->first();
+
+        return (int)$userData->id;
+    }
+
+    /**
+     * Modify existing user
+     *
+     * @param string $username
+     * @param string $password
+     * @param string $firstname
+     * @param string $lastname
+     * @param string $email
+     * @return integer
+     */
+    public function modifyUser(string $username, string $password, string $firstname, string $lastname, string $email): int
+    {
+        $userData = UserTable::where("username", "=", $username)->first();
+
+        if (!$userData) {
+            return -1;
+        }
+
+        $dbValues = [
+            'password' => $password,
+            'firstname' => $firstname,
+            'lastname' => $lastname,
+            'email' => $email,
+        ];
+
+        $userData->update($dbValues);
+
+        return (int)$userData->id;
+    }
+
+    /**
+     * Delete existing user (by username)
+     *
+     * @param string $username
+     * @return integer
+     */
+    public function deleteUser(string $username): int
+    {
+        $userData = UserTable::where("username", "=", $username)->first();
+
+        if (!$userData) {
+            return -1;
+        }
+
+        $userData->delete();
+
+        return (int)$userData->id;
+    }
 }
