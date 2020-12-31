@@ -86,6 +86,11 @@ _backup*
 /examples/Example_02.01a-INVOICE_ubl.xml
 /examples/Example_03.02a-INVOICE_ubl_XRechnungBuilder.xml
 /tests/*.xml
-/app/*
+/app/
+/etc/
 /var/
 phoenix.json
+/etc/middleware.php
+/etc/routes.php
+/etc/services.php
+/etc/settings.php
