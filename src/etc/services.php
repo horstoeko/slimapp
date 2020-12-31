@@ -23,7 +23,9 @@ use Twig\Extra\Markdown\DefaultMarkdown as TwigDefaultMarkdown;
 use Twig\Extra\Markdown\MarkdownRuntime as TwigMarkdownRuntime;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Slim\Middleware\Session as SessionMiddleware;
+use SlimSession\Helper as SessionHelper;
 use horstoeko\slimapp\middleware\SlimAppMiddlewareLocale;
+use horstoeko\slimapp\security\SlimAppLoginManager;
 
 return [
     LoggerInterface::class => function (ContainerInterface $c) {
@@ -45,6 +47,10 @@ return [
         $sessionSettings = $settings['session'];
 
         return new SessionMiddleware($sessionSettings);
+    },
+
+    SessionHelper::class => function () {
+        return new SessionHelper();
     },
 
     SymfonyTranslator::class => function (ContainerInterface $c) {
@@ -152,6 +158,10 @@ return [
         $capsule->bootEloquent();
 
         return $capsule;
+    },
+
+    SlimAppLoginManager::class => function (Capsule $capsule, SessionHelper $sessionHelper) {
+        return new SlimAppLoginManager($capsule, $sessionHelper);
     },
 
     SlimAppMiddlewareLocale::class => function (ContainerInterface $c, SymfonyTranslator $translator) {
