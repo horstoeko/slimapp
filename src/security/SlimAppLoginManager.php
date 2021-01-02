@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace horstoeko\slimapp\security;
 
+use horstoeko\slimapp\crypt\SlimAppQuickEncryption;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use horstoeko\slimapp\dbtables\User as UserTable;
 use SlimSession\Helper as SessionHelper;
@@ -46,9 +47,17 @@ class SlimAppLoginManager
      */
     public function loginUser(string $username, string $password): bool
     {
-        $userData = UserTable::where("username", "=", $username)->andWhere("password", "=", $password)->first();
+        if ($this->isSignedIn()) {
+            $this->logoutUser();
+        }
+
+        $userData = UserTable::where("username", "=", $username)->first();
 
         if (!$userData) {
+            return false;
+        }
+
+        if ($userData->password != $password) {
             return false;
         }
 

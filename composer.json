@@ -53,7 +53,8 @@
         "illuminate/database": "^8",
         "lulco/phoenix": "^1",
         "bryanjhv/slim-session": "^4",
-        "horstoeko/stringmanagement": "^1"
+        "horstoeko/stringmanagement": "^1",
+        "miladrahimi/phpcrypt": "^5"
     },
     "require-dev": {
         "clean/phpdoc-md": "^0",

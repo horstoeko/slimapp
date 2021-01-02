@@ -11,10 +11,10 @@ class Initialization extends AbstractMigration
             ->setCollation('utf8_general_ci')
             ->addColumn('id', 'biginteger', ['autoincrement' => true])
             ->addColumn('username', 'string', ['default' => '', 'length' => 50])
-            ->addColumn('password', 'string', ['default' => '', 'length' => 250])
-            ->addColumn('firstname', 'string', ['default' => '', 'length' => 50])
-            ->addColumn('lastname', 'string', ['default' => '', 'length' => 50])
-            ->addColumn('email', 'string', ['default' => '', 'length' => 80])
+            ->addColumn('password', 'string', ['default' => '', 'length' => 1024])
+            ->addColumn('firstname', 'string', ['default' => '', 'length' => 1024])
+            ->addColumn('lastname', 'string', ['default' => '', 'length' => 1024])
+            ->addColumn('email', 'string', ['default' => '', 'length' => 1024])
             ->create();
     }
 

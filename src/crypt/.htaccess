@@ -1,0 +1,9 @@
+<Files "private.key">  
+  Order Allow,Deny
+  Deny from all
+</Files>
+
+<Files "public.key">  
+  Order Allow,Deny
+  Deny from all
+</Files>

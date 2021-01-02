@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace horstoeko\slimapp\dbtables;
 
-use Illuminate\Database\Eloquent\Model as Eloquent;
+use horstoeko\slimapp\eloquent\ModelWithEncryption as Eloquent;
 
 class User extends Eloquent
 {
@@ -23,9 +23,7 @@ class User extends Eloquent
     protected $table = "slimapp_users";
 
     /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
+     * @inheritDoc
      */
     protected $fillable = [
         'username',
@@ -36,11 +34,19 @@ class User extends Eloquent
     ];
 
     /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
+     * @inheritDoc
      */
     protected $hidden = [
         'password',
+    ];
+
+    /**
+     * @inheritDoc
+     */
+    protected $encryptable = [
+        'password',
+        'firstname',
+        'lastname',
+        'email',
     ];
 }
