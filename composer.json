@@ -76,6 +76,9 @@
             "php -r \"@mkdir('./var');\"",
             "php -r \"@mkdir('./var/twig');\"",
             "php -r \"@mkdir('./app');\"",
+            "php -r \"@mkdir('./app/action');\"",
+            "php -r \"@mkdir('./app/html');\"",
+            "php -r \"@mkdir('./app/dbtables');\"",
             "php -r \"@mkdir('./etc');\"",
             "php -r \"@mkdir('./logs');\"",
             "php -r \"if (file_exists('./phoenix.json') == false) { copy('./src/dbmigrations/phoenix.json.dist','./phoenix.json'); }\""
