@@ -14,6 +14,7 @@ use horstoeko\slimapp\twig\SlimAppTwigApcuCache;
 use Slim\Middleware\Session as SessionMiddleware;
 use horstoeko\slimapp\security\SlimAppLoginManager;
 use Illuminate\Database\Capsule\Manager as Capsule;
+use horstoeko\slimapp\twig\SlimAppSecurityExtension;
 use Twig\Extra\Html\HtmlExtension as TwigHtmlExtension;
 use Twig\Extra\Intl\IntlExtension as TwigIntlExtension;
 use Twig\Extension\DebugExtension as TwigDebugExtension;
@@ -122,6 +123,7 @@ return [
         $view->addExtension(new TwigHtmlExtension());
         $view->addExtension(new TwigDebugExtension());
         $view->addExtension(new SymfonyTwigBridgeTranslationExtension($c->get(SymfonyTranslator::class)));
+        $view->addExtension(new SlimAppSecurityExtension($c->get(SlimAppLoginManager::class)));
 
         $view->addRuntimeLoader(
             new class implements TwigRuntimeLoaderInterface
