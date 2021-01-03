@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace horstoeko\slimapp\application;
 
+use Slim\App;
 use DI\ContainerBuilder;
 use Psr\Log\LoggerInterface;
 use Slim\Factory\AppFactory;
@@ -55,6 +56,8 @@ class SlimApp
     public function initContainerBuilder(): void
     {
         $this->containerBuilder = new ContainerBuilder();
+        //$this->containerBuilder->enableCompilation(__DIR__ . '/../../var');
+        //$this->containerBuilder->enableDefinitionCache();
     }
 
     /**
@@ -69,6 +72,8 @@ class SlimApp
         AppFactory::setContainer($this->container);
 
         $this->app = AppFactory::create();
+
+        $this->container->set(App::class, $this->app);
     }
 
     /**

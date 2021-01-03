@@ -63,9 +63,8 @@ class SlimAppMiddlewareLocale extends SlimAppMiddlewareBase
     /**
      * Constructor
      *
-     * @param ContainerInterface $container
-     *
-     * @return XSlimMiddlewareLocale
+     * @param Translator $translator
+     * @param array $options
      */
     public function __construct(Translator $translator, $options)
     {

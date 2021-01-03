@@ -2,35 +2,37 @@
 
 declare(strict_types=1);
 
-use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use Psr\Log\LoggerInterface;
+use Monolog\Handler\StreamHandler;
 use Monolog\Processor\UidProcessor;
 use Psr\Container\ContainerInterface;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\Translation\Translator as SymfonyTranslator;
-use Symfony\Component\Translation\Loader\ArrayLoader as SymfonyTranslatorArrayLoader;
-use Symfony\Component\Translation\Loader\PhpFileLoader as SymfonyTranslatorPhpFileLoader;
 use horstoeko\slimapp\twig\SlimAppTwig;
+use SlimSession\Helper as SessionHelper;
 use horstoeko\slimapp\twig\SlimAppTwigApcCache;
 use horstoeko\slimapp\twig\SlimAppTwigApcuCache;
-use Twig\Extra\Intl\IntlExtension as TwigIntlExtension;
-use Twig\Extra\Markdown\MarkdownExtension as TwigMarkdownExtension;
+use Slim\Middleware\Session as SessionMiddleware;
+use horstoeko\slimapp\security\SlimAppLoginManager;
+use Illuminate\Database\Capsule\Manager as Capsule;
 use Twig\Extra\Html\HtmlExtension as TwigHtmlExtension;
+use Twig\Extra\Intl\IntlExtension as TwigIntlExtension;
 use Twig\Extension\DebugExtension as TwigDebugExtension;
-use Symfony\Bridge\Twig\Extension\TranslationExtension as SymfonyTwigBridgeTranslationExtension;
-use Twig\RuntimeLoader\RuntimeLoaderInterface as TwigRuntimeLoaderInterface;
+use horstoeko\slimapp\middleware\SlimAppMiddlewareLocale;
+use horstoeko\slimapp\middleware\SlimAppMiddlewareBasicAuth;
+use horstoeko\slimapp\middleware\SlimAppMiddlewareIpAddress;
 use Twig\Extra\Markdown\DefaultMarkdown as TwigDefaultMarkdown;
 use Twig\Extra\Markdown\MarkdownRuntime as TwigMarkdownRuntime;
-use Illuminate\Database\Capsule\Manager as Capsule;
-use Slim\Middleware\Session as SessionMiddleware;
-use SlimSession\Helper as SessionHelper;
-use horstoeko\slimapp\middleware\SlimAppMiddlewareLocale;
-use horstoeko\slimapp\security\SlimAppLoginManager;
+use Symfony\Component\Translation\Translator as SymfonyTranslator;
+use Twig\Extra\Markdown\MarkdownExtension as TwigMarkdownExtension;
+use Twig\RuntimeLoader\RuntimeLoaderInterface as TwigRuntimeLoaderInterface;
+use Symfony\Component\Translation\Loader\ArrayLoader as SymfonyTranslatorArrayLoader;
+use Symfony\Component\Translation\Loader\PhpFileLoader as SymfonyTranslatorPhpFileLoader;
+use Symfony\Bridge\Twig\Extension\TranslationExtension as SymfonyTwigBridgeTranslationExtension;
 
 return [
     LoggerInterface::class => function (ContainerInterface $c) {
         $settings = $c->get('settings');
-        $loggerSettings = $settings['logger'];
+        $loggerSettings = $settings['logger'] ?? [];
 
         $logger = new Logger($loggerSettings['name']);
         $processor = new UidProcessor();
@@ -44,7 +46,7 @@ return [
 
     SessionMiddleware::class => function (ContainerInterface $c) {
         $settings = $c->get('settings');
-        $sessionSettings = $settings['session'];
+        $sessionSettings = $settings['session'] ?? [];
 
         return new SessionMiddleware($sessionSettings);
     },
@@ -55,7 +57,7 @@ return [
 
     SymfonyTranslator::class => function (ContainerInterface $c) {
         $settings = $c->get('settings');
-        $translatorSettings = $settings['translator'];
+        $translatorSettings = $settings['translator'] ?? [];
 
         $translator = new SymfonyTranslator($translatorSettings["defaultlanguagecode"]);
         $translator->setFallbackLocales([$translatorSettings["defaultlanguagecode"]]);
@@ -67,7 +69,7 @@ return [
 
     SlimAppTwig::class => function (ContainerInterface $c) {
         $settings = $c->get('settings');
-        $twigSettings = $settings['twig'];
+        $twigSettings = $settings['twig'] ?? [];
 
         switch ($twigSettings["cachemode"] ?? 0) {
             case 1:
@@ -138,7 +140,7 @@ return [
 
     Capsule::class => function (ContainerInterface $c) {
         $settings = $c->get('settings');
-        $dbSettings = $settings['db'];
+        $dbSettings = $settings['db'] ?? [];
 
         $capsule = new Capsule();
 
@@ -166,10 +168,33 @@ return [
 
     SlimAppMiddlewareLocale::class => function (ContainerInterface $c, SymfonyTranslator $translator) {
         $settings = $c->get('settings');
-        $localeSettings = $settings['locale'];
+        $localeSettings = $settings['locale'] ?? [];
 
         $localeMiddleware = new SlimAppMiddlewareLocale($translator, $localeSettings);
 
         return $localeMiddleware;
-    }
+    },
+
+    SlimAppMiddlewareBasicAuth::class => function (ContainerInterface $c, SlimAppLoginManager $loginManager) {
+        $settings = $c->get('settings');
+        $basicAuthSettings = $settings['basicauth'] ?? [];
+
+        /**
+         * @var Slim\App
+         */
+        $app = $c->get(Slim\App::class);
+
+        $basicAuthMiddleware = new SlimAppMiddlewareBasicAuth($loginManager, $app->getResponseFactory(), $basicAuthSettings);
+
+        return $basicAuthMiddleware;
+    },
+
+    SlimAppMiddlewareIpAddress::class => function (ContainerInterface $c) {
+        $settings = $c->get('settings');
+        $ipAddrSettings = $settings['ipaddr'] ?? [];
+
+        $ipAddrMiddleware = new SlimAppMiddlewareIpAddress($ipAddrSettings);
+
+        return $ipAddrMiddleware;
+    },
 ];
