@@ -80,7 +80,6 @@ abstract class SlimAppBaseAction
 
     /**
      * @return Response
-     * @throws DomainRecordNotFoundException
      * @throws HttpBadRequestException
      */
     abstract protected function action(): Response;

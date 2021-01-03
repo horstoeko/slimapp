@@ -130,6 +130,7 @@ class SlimApp
         $displayErrorDetails = $this->container->get('settings')['displayErrorDetails'] ?? false;
         $logger = $this->container->get(LoggerInterface::class);
 
+        $this->app->addBodyParsingMiddleware();
         $this->app->addRoutingMiddleware();
         $this->app->addErrorMiddleware($displayErrorDetails, true, true, $logger);
     }

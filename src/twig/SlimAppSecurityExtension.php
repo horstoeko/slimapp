@@ -49,6 +49,7 @@ class SlimAppSecurityExtension extends SlimAppTwigExtension
     {
         return [
             new TwigFunction('IsSignedIn', array($this, 'IsSignedIn')),
+            new TwigFunction('IsAdminSignedIn', array($this, 'IsAdminSignedIn')),
             new TwigFunction('SignedInUser', array($this, 'SignedInUser')),
             new TwigFunction('SignedInUserFirstname', array($this, 'SignedInUserFirstname')),
             new TwigFunction('SignedInUserLastname', array($this, 'SignedInUserLastname')),
@@ -64,6 +65,16 @@ class SlimAppSecurityExtension extends SlimAppTwigExtension
     public function IsSignedIn()
     {
         return $this->loginManager->isSignedIn();
+    }
+
+    /**
+     * Get if anyone with admin permissions is signed in
+     *
+     * @return bool
+     */
+    public function IsAdminSignedIn()
+    {
+        return $this->loginManager->isAdminSignedIn();
     }
 
     /**

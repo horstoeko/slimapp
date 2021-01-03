@@ -16,6 +16,7 @@ class SlimAppLoginManager
     protected const SESSION_LOGINUSERNAME = 'login.user.username';
     protected const SESSION_LOGINFIRSTNAME = 'login.user.firstname';
     protected const SESSION_LOGINLASTNAME = 'login.user.lastname';
+    protected const SESSION_LOGINADMIN = 'login.user.isadmin';
 
     /**
      * @var \Illuminate\Database\Capsule\Manager
@@ -66,6 +67,7 @@ class SlimAppLoginManager
         $this->sessionHelper->set(self::SESSION_LOGINUSERNAME, $userData->username);
         $this->sessionHelper->set(self::SESSION_LOGINFIRSTNAME, $userData->firstname);
         $this->sessionHelper->set(self::SESSION_LOGINLASTNAME, $userData->lastname);
+        $this->sessionHelper->set(self::SESSION_LOGINADMIN, $userData->admin);
 
         return true;
     }
@@ -82,6 +84,7 @@ class SlimAppLoginManager
         $this->sessionHelper->delete(self::SESSION_LOGINUSERNAME);
         $this->sessionHelper->delete(self::SESSION_LOGINFIRSTNAME);
         $this->sessionHelper->delete(self::SESSION_LOGINLASTNAME);
+        $this->sessionHelper->delete(self::SESSION_LOGINADMIN);
     }
 
     /**
@@ -94,6 +97,15 @@ class SlimAppLoginManager
         return $this->sessionHelper->get(self::SESSION_LOGINFLAG, false);
     }
 
+    /**
+     * Returns true if a user is logged in in the current session
+     *
+     * @return boolean
+     */
+    public function isAdminSignedIn(): bool
+    {
+        return $this->isSignedIn() && $this->sessionHelper->get(self::SESSION_LOGINADMIN, 0) == 1;
+    }
 
     /**
      * Get the information about a signed-in user

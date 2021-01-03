@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace horstoeko\slimapp\middleware;
 
 use \PSr\Http\Message\ResponseInterface as Response;

@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Slim\App;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 use Monolog\Handler\StreamHandler;
@@ -25,6 +26,8 @@ use Twig\Extra\Markdown\DefaultMarkdown as TwigDefaultMarkdown;
 use Twig\Extra\Markdown\MarkdownRuntime as TwigMarkdownRuntime;
 use Symfony\Component\Translation\Translator as SymfonyTranslator;
 use Twig\Extra\Markdown\MarkdownExtension as TwigMarkdownExtension;
+use horstoeko\slimapp\middleware\SlimAppMiddlewareRestrictedRouteAdmin;
+use horstoeko\slimapp\middleware\SlimAppMiddlewareRestrictedRouteLight;
 use Twig\RuntimeLoader\RuntimeLoaderInterface as TwigRuntimeLoaderInterface;
 use Symfony\Component\Translation\Loader\ArrayLoader as SymfonyTranslatorArrayLoader;
 use Symfony\Component\Translation\Loader\PhpFileLoader as SymfonyTranslatorPhpFileLoader;
@@ -177,14 +180,9 @@ return [
         return $localeMiddleware;
     },
 
-    SlimAppMiddlewareBasicAuth::class => function (ContainerInterface $c, SlimAppLoginManager $loginManager) {
+    SlimAppMiddlewareBasicAuth::class => function (ContainerInterface $c, SlimAppLoginManager $loginManager, \Slim\App $app) {
         $settings = $c->get('settings');
         $basicAuthSettings = $settings['basicauth'] ?? [];
-
-        /**
-         * @var Slim\App
-         */
-        $app = $c->get(Slim\App::class);
 
         $basicAuthMiddleware = new SlimAppMiddlewareBasicAuth($loginManager, $app->getResponseFactory(), $basicAuthSettings);
 
@@ -198,5 +196,23 @@ return [
         $ipAddrMiddleware = new SlimAppMiddlewareIpAddress($ipAddrSettings);
 
         return $ipAddrMiddleware;
+    },
+
+    SlimAppMiddlewareRestrictedRouteAdmin::class => function (ContainerInterface $c, SlimAppLoginManager $loginManager, \Slim\App $app) {
+        $settings = $c->get('settings');
+        $restrictedRouteSettings = $settings['restrictedroute.admin'] ?? [];
+
+        $restrictedRoute = new SlimAppMiddlewareRestrictedRouteAdmin($loginManager, $app->getResponseFactory(), $restrictedRouteSettings);
+
+        return $restrictedRoute;
+    },
+
+    SlimAppMiddlewareRestrictedRouteLight::class => function (ContainerInterface $c, SlimAppLoginManager $loginManager, \Slim\App $app) {
+        $settings = $c->get('settings');
+        $restrictedRouteSettings = $settings['restrictedroute.light'] ?? [];
+
+        $restrictedRoute = new SlimAppMiddlewareRestrictedRouteLight($loginManager, $app->getResponseFactory(), $restrictedRouteSettings);
+
+        return $restrictedRoute;
     },
 ];
