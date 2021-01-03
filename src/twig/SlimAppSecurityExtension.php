@@ -9,7 +9,7 @@ use horstoeko\slimapp\twig\SlimAppTwigExtension;
 use horstoeko\slimapp\security\SlimAppLoginManager;
 
 /**
- * XSlim Security Extensions for twig
+ * SlimApp Security Extensions for twig
  */
 class SlimAppSecurityExtension extends SlimAppTwigExtension
 {
@@ -37,7 +37,7 @@ class SlimAppSecurityExtension extends SlimAppTwigExtension
      */
     public function getName()
     {
-        return 'xslimsecurity';
+        return 'slimappsecurity';
     }
 
     /**

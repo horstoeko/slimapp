@@ -55,7 +55,7 @@ class SlimAppRouteLoader extends SlimAppBaseLoader
                 $method = [$method];
             }
 
-            $route = $this->app->map($method, $pattern, $callback);
+            $route = $this->app->map($method, $pattern, $callback)->setName($routename);
 
             foreach ($middlewares as $middleware) {
                 $route->add($middleware);

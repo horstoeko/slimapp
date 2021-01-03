@@ -16,6 +16,7 @@ use Slim\Middleware\Session as SessionMiddleware;
 use horstoeko\slimapp\security\SlimAppLoginManager;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use horstoeko\slimapp\twig\SlimAppSecurityExtension;
+use horstoeko\slimapp\twig\SlimAppTwigRoutingExtension;
 use Twig\Extra\Html\HtmlExtension as TwigHtmlExtension;
 use Twig\Extra\Intl\IntlExtension as TwigIntlExtension;
 use Twig\Extension\DebugExtension as TwigDebugExtension;
@@ -71,7 +72,7 @@ return [
         return $translator;
     },
 
-    SlimAppTwig::class => function (ContainerInterface $c) {
+    SlimAppTwig::class => function (ContainerInterface $c, SymfonyTranslator $translator, SlimAppLoginManager $loginManager, Slim\App $app) {
         $settings = $c->get('settings');
         $twigSettings = $settings['twig'] ?? [];
 
@@ -125,8 +126,9 @@ return [
         $view->addExtension(new TwigMarkdownExtension());
         $view->addExtension(new TwigHtmlExtension());
         $view->addExtension(new TwigDebugExtension());
-        $view->addExtension(new SymfonyTwigBridgeTranslationExtension($c->get(SymfonyTranslator::class)));
-        $view->addExtension(new SlimAppSecurityExtension($c->get(SlimAppLoginManager::class)));
+        $view->addExtension(new SymfonyTwigBridgeTranslationExtension($translator));
+        $view->addExtension(new SlimAppSecurityExtension($loginManager));
+        $view->addExtension(new SlimAppTwigRoutingExtension($app->getRouteCollector(), $app->getRouteCollector()->getRouteParser()));
 
         $view->addRuntimeLoader(
             new class implements TwigRuntimeLoaderInterface
