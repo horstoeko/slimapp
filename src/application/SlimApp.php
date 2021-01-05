@@ -56,8 +56,6 @@ class SlimApp
     public function initContainerBuilder(): void
     {
         $this->containerBuilder = new ContainerBuilder();
-        //$this->containerBuilder->enableCompilation(__DIR__ . '/../../var');
-        //$this->containerBuilder->enableDefinitionCache();
     }
 
     /**

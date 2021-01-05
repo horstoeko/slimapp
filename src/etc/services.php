@@ -107,8 +107,8 @@ return [
             $directories["slimbaseapp"] = __DIR__ . "/../baseapp/html";
         }
 
-        if (is_dir(__DIR__ . "/../../app/html")) {
-            $directories["slimapp"] = __DIR__ . "/../../app/html";
+        if (is_dir(__DIR__ . "/../../../../../app/html")) {
+            $directories["slimapp"] = __DIR__ . "/../../../../../app/html";
         }
 
         $view = new SlimAppTwig(
