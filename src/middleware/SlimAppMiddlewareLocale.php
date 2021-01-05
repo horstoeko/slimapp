@@ -123,7 +123,7 @@ class SlimAppMiddlewareLocale extends SlimAppMiddlewareBase
 
         $translationfiles = [
             [__DIR__ . "/../etc/" . $this->languageDefinition->language_complete . '.php', "slimbaseapp"],
-            [__DIR__ . "/../../etc/" . $this->languageDefinition->language_complete . '.php', "slimapp"],
+            [__DIR__ . "/../../../../../etc/" . $this->languageDefinition->language_complete . '.php', "slimapp"],
         ];
 
         foreach ($translationfiles as $translationfile) {

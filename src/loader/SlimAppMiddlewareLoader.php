@@ -28,7 +28,7 @@ class SlimAppMiddlewareLoader extends SlimAppBaseLoader
     {
         return [
             __DIR__ . "/../etc/middleware.php",
-            __DIR__ . "/../../etc/middleware.php",
+            __DIR__ . "/../../../../../etc/middleware.php",
         ];
     }
 

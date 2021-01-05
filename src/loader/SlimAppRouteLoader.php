@@ -28,7 +28,7 @@ class SlimAppRouteLoader extends SlimAppBaseLoader
     {
         return [
             __DIR__ . "/../etc/routes.php",
-            __DIR__ . "/../../etc/routes.php",
+            __DIR__ . "/../../../../../etc/routes.php",
         ];
     }
 

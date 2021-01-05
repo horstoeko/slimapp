@@ -28,7 +28,7 @@ class SlimAppSettingsLoader extends SlimAppBaseLoader
     {
         return [
             __DIR__ . "/../etc/settings.php",
-            __DIR__ . "/../../etc/settings.php",
+            __DIR__ . "/../../../../../etc/settings.php",
         ];
     }
 

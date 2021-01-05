@@ -28,7 +28,7 @@ class SlimAppServiceLoader extends SlimAppBaseLoader
     {
         return [
             __DIR__ . "/../etc/services.php",
-            __DIR__ . "/../../etc/services.php",
+            __DIR__ . "/../../../../../etc/services.php",
         ];
     }
 
