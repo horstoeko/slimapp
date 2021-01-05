@@ -4,7 +4,7 @@ namespace horstoeko\slimapp\crypt;
 
 class SlimAppEncryptionManager
 {
-    private $_registeredEngines = [];
+    private $registeredEngines = [];
 
     /**
      * Constructor
@@ -40,7 +40,7 @@ class SlimAppEncryptionManager
                 $engine = new \stdClass();
                 $engine->enabled = $enable;
                 $engine->instance = $instance;
-                $this->_registeredEngines[$name] = $engine;
+                $this->registeredEngines[$name] = $engine;
             }
         }
     }
@@ -57,7 +57,7 @@ class SlimAppEncryptionManager
             return;
         }
 
-        unset($this->_registeredEngines[$name]);
+        unset($this->registeredEngines[$name]);
     }
 
     /**
@@ -72,7 +72,7 @@ class SlimAppEncryptionManager
             return;
         }
 
-        $engine = $this->_registeredEngines[$name];
+        $engine = $this->registeredEngines[$name];
         $engine->enabled = true;
     }
 
@@ -88,7 +88,7 @@ class SlimAppEncryptionManager
             return;
         }
 
-        $engine = $this->_registeredEngines[$name];
+        $engine = $this->registeredEngines[$name];
         $engine->enabled = false;
     }
 
@@ -99,7 +99,7 @@ class SlimAppEncryptionManager
      */
     public function enableAllEngines()
     {
-        foreach ($this->_registeredEngines as $engineName => $engineObject) {
+        foreach ($this->registeredEngines as $engineName => $engineObject) {
             $this->enableEngine($engineName);
         }
     }
@@ -111,7 +111,7 @@ class SlimAppEncryptionManager
      */
     public function disableAllEngines()
     {
-        foreach ($this->_registeredEngines as $engineName => $engineObject) {
+        foreach ($this->registeredEngines as $engineName => $engineObject) {
             $this->disableEngine($engineName);
         }
     }
@@ -124,7 +124,7 @@ class SlimAppEncryptionManager
      */
     public function hasEngine($name)
     {
-        return isset($this->_registeredEngines[$name]);
+        return isset($this->registeredEngines[$name]);
     }
 
     /**
@@ -139,7 +139,7 @@ class SlimAppEncryptionManager
             return null;
         }
 
-        return $this->_registeredEngines[$name]->instance;
+        return $this->registeredEngines[$name]->instance;
     }
 
     /**
@@ -150,7 +150,7 @@ class SlimAppEncryptionManager
      */
     public function encrypt($data)
     {
-        foreach ($this->_registeredEngines as $registeredEngine) {
+        foreach ($this->registeredEngines as $registeredEngine) {
             if ($registeredEngine->enabled === false) {
                 continue;
             }
@@ -171,7 +171,7 @@ class SlimAppEncryptionManager
      */
     public function decrypt($data)
     {
-        foreach ($this->_registeredEngines as $registeredEngine) {
+        foreach ($this->registeredEngines as $registeredEngine) {
             if ($registeredEngine->enabled === false) {
                 continue;
             }
@@ -204,7 +204,7 @@ class SlimAppEncryptionManager
      */
     public function __get($varname)
     {
-        list($engineName, $property) = $this->_splitVarname($varname);
+        list($engineName, $property) = $this->splitVarname($varname);
 
         $engine = $this->getEngine($engineName);
 
@@ -223,7 +223,7 @@ class SlimAppEncryptionManager
      */
     public function __set($varname, $varvalue)
     {
-        list($engineName, $property) = $this->_splitVarname($varname);
+        list($engineName, $property) = $this->splitVarname($varname);
 
         $engine = $this->getEngine($engineName);
 
@@ -240,7 +240,7 @@ class SlimAppEncryptionManager
      */
     public function __isset($varname)
     {
-        list($engineName, $property) = $this->_splitVarname($varname);
+        list($engineName, $property) = $this->splitVarname($varname);
 
         $engine = $this->getEngine($engineName);
 
@@ -257,7 +257,7 @@ class SlimAppEncryptionManager
      * @param [type] $varname
      * @return void
      */
-    private function _splitVarname($varname)
+    private function splitVarname($varname)
     {
         return explode("_", $varname);
     }

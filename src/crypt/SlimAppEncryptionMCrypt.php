@@ -5,15 +5,15 @@ namespace horstoeko\slimapp\crypt;
 class SlimAppEncryptionMCrypt implements SlimAppEncryptionInterface
 {
 
-    private $_key;
-    private $_initialized = false;
+    private $key;
+    private $initialized = false;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->_setup();
+        $this->setup();
     }
 
     /**
@@ -37,7 +37,24 @@ class SlimAppEncryptionMCrypt implements SlimAppEncryptionInterface
         if (!$this->isInstalled()) {
             return $plaintext;
         }
-        return rtrim(base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, $this->_key, $plaintext, MCRYPT_MODE_ECB, mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND))), "\0");
+        return rtrim(
+            base64_encode(
+                mcrypt_encrypt(
+                    MCRYPT_RIJNDAEL_256,
+                    $this->key,
+                    $plaintext,
+                    MCRYPT_MODE_ECB,
+                    mcrypt_create_iv(
+                        mcrypt_get_iv_size(
+                            MCRYPT_RIJNDAEL_256,
+                            MCRYPT_MODE_ECB
+                        ),
+                        MCRYPT_RAND
+                    )
+                )
+            ),
+            "\0"
+        );
     }
 
     /**
@@ -51,7 +68,23 @@ class SlimAppEncryptionMCrypt implements SlimAppEncryptionInterface
         if (!$this->isInstalled()) {
             return $encrypted;
         }
-        return rtrim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, $this->_key, base64_decode($encrypted), MCRYPT_MODE_ECB, mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND)), "\0");
+
+        return rtrim(
+            mcrypt_decrypt(
+                MCRYPT_RIJNDAEL_256,
+                $this->key,
+                base64_decode($encrypted),
+                MCRYPT_MODE_ECB,
+                mcrypt_create_iv(
+                    mcrypt_get_iv_size(
+                        MCRYPT_RIJNDAEL_256,
+                        MCRYPT_MODE_ECB
+                    ),
+                    MCRYPT_RAND
+                )
+            ),
+            "\0"
+        );
     }
 
     /**
@@ -61,7 +94,7 @@ class SlimAppEncryptionMCrypt implements SlimAppEncryptionInterface
      */
     public function isInstalled()
     {
-        return $this->_initialized && $this->_mcryptInstalled();
+        return $this->initialized && $this->mcryptInstalled();
     }
 
     /**
@@ -69,10 +102,10 @@ class SlimAppEncryptionMCrypt implements SlimAppEncryptionInterface
      *
      * @return void
      */
-    private function _setup()
+    private function setup()
     {
-        $this->_key = "dd3ccaf10fb759ef9c434b933c8324c335dbad806a88c26db9b3ff327e73e675";
-        $this->_initialized = true;
+        $this->key = "dd3ccaf10fb759ef9c434b933c8324c335dbad806a88c26db9b3ff327e73e675";
+        $this->initialized = true;
     }
 
     /**
@@ -80,9 +113,12 @@ class SlimAppEncryptionMCrypt implements SlimAppEncryptionInterface
      *
      * @return void
      */
-    private function _mcryptInstalled()
+    private function mcryptInstalled()
     {
-        return function_exists("mcrypt_encrypt") && function_exists("mcrypt_create_iv") && function_exists("mcrypt_get_iv_size") && function_exists("mcrypt_decrypt");
+        return function_exists("mcrypt_encrypt") &&
+            function_exists("mcrypt_create_iv") &&
+            function_exists("mcrypt_get_iv_size") &&
+            function_exists("mcrypt_decrypt");
     }
 
     /**
@@ -95,7 +131,7 @@ class SlimAppEncryptionMCrypt implements SlimAppEncryptionInterface
     {
         switch (strtolower($varname)) {
             case 'key':
-                return $this->_key;
+                return $this->key;
         }
     }
 
@@ -109,7 +145,7 @@ class SlimAppEncryptionMCrypt implements SlimAppEncryptionInterface
     {
         switch (strtolower($varname)) {
             case 'key':
-                $this->_key = $varvalue;
+                $this->key = $varvalue;
                 break;
         }
     }
@@ -124,7 +160,7 @@ class SlimAppEncryptionMCrypt implements SlimAppEncryptionInterface
     {
         switch (strtolower($varname)) {
             case 'key':
-                return isset($this->_key);
+                return isset($this->key);
         }
     }
 }

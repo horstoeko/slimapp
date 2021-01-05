@@ -46,8 +46,11 @@ class SlimAppMiddlewareRestrictedRoute extends SlimAppMiddlewareBase
     /**
      * Constructor
      */
-    public function __construct(SlimAppLoginManager $loginManager, ResponseFactoryInterface $responseFactory, array $options)
-    {
+    public function __construct(
+        SlimAppLoginManager $loginManager,
+        ResponseFactoryInterface $responseFactory,
+        array $options
+    ) {
         $this->loginManager = $loginManager;
         $this->responseFactory = $responseFactory;
 
@@ -98,7 +101,7 @@ class SlimAppMiddlewareRestrictedRoute extends SlimAppMiddlewareBase
      */
     public function process(Request $request, RequestHandler $handler): Response
     {
-        if (!$this->GetIsSignedIn()) {
+        if (!$this->getIsSignedIn()) {
             $currentUrl = $request->getUri()->getPath();
             $redirectTo = "";
 
@@ -110,7 +113,9 @@ class SlimAppMiddlewareRestrictedRoute extends SlimAppMiddlewareBase
                     }
                 }
 
-                if (isset($this->defaultFailureRedirect) && $this->defaultFailureRedirect != "" && (!isset($redirectTo) || $redirectTo == "")) {
+                if (isset($this->defaultFailureRedirect) &&
+                    $this->defaultFailureRedirect != "" &&
+                    (!isset($redirectTo) || $redirectTo == "")) {
                     $redirectTo = $this->defaultFailureRedirect;
                 }
 
@@ -134,7 +139,7 @@ class SlimAppMiddlewareRestrictedRoute extends SlimAppMiddlewareBase
      *
      * @return bool
      */
-    protected function GetIsSignedIn()
+    protected function getIsSignedIn()
     {
         return true;
     }

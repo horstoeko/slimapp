@@ -11,7 +11,7 @@ abstract class SlimAppBaseLoader
      *
      * @return array
      */
-    protected abstract function getFiles(): array;
+    abstract protected function getFiles(): array;
 
     /**
      * On after load and merge content of config file proceed the
@@ -20,7 +20,7 @@ abstract class SlimAppBaseLoader
      * @param  array $content
      * @return void
      */
-    protected abstract function onAfterLoad(array $content): void;
+    abstract protected function onAfterLoad(array $content): void;
 
     /**
      * Load the files
@@ -38,7 +38,7 @@ abstract class SlimAppBaseLoader
 
             $singleContent = include $file;
 
-            $content = self::array_merge_recursive_distinct($content, $singleContent);
+            $content = self::arrayMergeRecursiveDistinct($content, $singleContent);
         }
 
         $this->onAfterLoad($content);
@@ -52,13 +52,13 @@ abstract class SlimAppBaseLoader
      * @param  boolean $ignorenull
      * @return array
      */
-    protected static function array_merge_recursive_distinct(array $array1, array $array2, $ignorenull = false)
+    protected static function arrayMergeRecursiveDistinct(array $array1, array $array2, $ignorenull = false)
     {
         $merged = $array1;
 
         foreach ($array2 as $key => &$value) {
             if (is_array($value) && isset($merged[$key]) && is_array($merged[$key])) {
-                $merged[$key] = static::array_merge_recursive_distinct($merged[$key], $value);
+                $merged[$key] = static::arrayMergeRecursiveDistinct($merged[$key], $value);
             } else {
                 if (isset($value) || !$ignorenull) {
                     $merged[$key] = $value;

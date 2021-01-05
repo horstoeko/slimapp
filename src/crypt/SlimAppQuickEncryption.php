@@ -11,9 +11,9 @@ class SlimAppQuickEncryption
      * @param string $plaintext
      * @return string
      */
-    public static function EncryptMcrypt2($plaintext)
+    public static function encryptMcrypt2($plaintext)
     {
-        return self::_getEncryptionManager("mcrypt2")->encrypt($plaintext);
+        return self::getEncryptionManager("mcrypt2")->encrypt($plaintext);
     }
 
     /**
@@ -22,9 +22,9 @@ class SlimAppQuickEncryption
      * @param string $encrypted
      * @return string
      */
-    public static function DecryptMcrypt2($encrypted)
+    public static function decryptMcrypt2($encrypted)
     {
-        return self::_getEncryptionManager("mcrypt2")->decrypt($encrypted);
+        return self::getEncryptionManager("mcrypt2")->decrypt($encrypted);
     }
 
     /**
@@ -34,9 +34,9 @@ class SlimAppQuickEncryption
      * @param string $stringtocomparewith
      * @return bool
      */
-    public function CompareMcrypt2($encryptedstring, $stringtocomparewith)
+    public function compareMcrypt2($encryptedstring, $stringtocomparewith)
     {
-        return self::_getEncryptionManager("mcrypt2")->compare($encryptedstring, $stringtocomparewith);
+        return self::getEncryptionManager("mcrypt2")->compare($encryptedstring, $stringtocomparewith);
     }
 
     /**
@@ -45,9 +45,9 @@ class SlimAppQuickEncryption
      * @param string $plaintext
      * @return string
      */
-    public static function EncryptOpenSsl($plaintext)
+    public static function encryptOpenSsl($plaintext)
     {
-        return self::_getEncryptionManager("openssl")->encrypt($plaintext);
+        return self::getEncryptionManager("openssl")->encrypt($plaintext);
     }
 
     /**
@@ -56,9 +56,9 @@ class SlimAppQuickEncryption
      * @param string $encrypted
      * @return string
      */
-    public static function DecryptOpenSsl($encrypted)
+    public static function decryptOpenSsl($encrypted)
     {
-        return self::_getEncryptionManager("openssl")->decrypt($encrypted);
+        return self::getEncryptionManager("openssl")->decrypt($encrypted);
     }
 
     /**
@@ -68,9 +68,9 @@ class SlimAppQuickEncryption
      * @param string $stringtocomparewith
      * @return bool
      */
-    public function CompareOpenSsl($encryptedstring, $stringtocomparewith)
+    public function compareOpenSsl($encryptedstring, $stringtocomparewith)
     {
-        return self::_getEncryptionManager("openssl")->compare($encryptedstring, $stringtocomparewith);
+        return self::getEncryptionManager("openssl")->compare($encryptedstring, $stringtocomparewith);
     }
 
     /**
@@ -79,9 +79,9 @@ class SlimAppQuickEncryption
      * @param string $plaintext
      * @return string
      */
-    public static function EncryptOpenSslExt($plaintext)
+    public static function encryptOpenSslExt($plaintext)
     {
-        return self::_getEncryptionManager("opensslext")->encrypt($plaintext);
+        return self::getEncryptionManager("opensslext")->encrypt($plaintext);
     }
 
     /**
@@ -90,9 +90,9 @@ class SlimAppQuickEncryption
      * @param string $encrypted
      * @return string
      */
-    public static function DecryptOpenSslExt($encrypted)
+    public static function decryptOpenSslExt($encrypted)
     {
-        return self::_getEncryptionManager("opensslext")->decrypt($encrypted);
+        return self::getEncryptionManager("opensslext")->decrypt($encrypted);
     }
 
     /**
@@ -102,9 +102,9 @@ class SlimAppQuickEncryption
      * @param string $stringtocomparewith
      * @return bool
      */
-    public function CompareOpenSslExt($encryptedstring, $stringtocomparewith)
+    public function compareOpenSslExt($encryptedstring, $stringtocomparewith)
     {
-        return self::_getEncryptionManager("opensslext")->compare($encryptedstring, $stringtocomparewith);
+        return self::getEncryptionManager("opensslext")->compare($encryptedstring, $stringtocomparewith);
     }
 
     /**
@@ -112,7 +112,7 @@ class SlimAppQuickEncryption
      *
      * @return SlimAppEncryptionManager
      */
-    private static function _getEncryptionManager($useEngine)
+    private static function getEncryptionManager($useEngine)
     {
         $encryptionManager = new SlimAppEncryptionManager();
         $encryptionManager->disableAllEngines();

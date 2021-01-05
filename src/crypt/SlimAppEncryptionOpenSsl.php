@@ -22,19 +22,19 @@ class SlimAppEncryptionOpenSsl implements SlimAppEncryptionInterface
     /**
      * @var boolean
      */
-    private $_initialized = false;
+    private $initialized = false;
 
     /**
      * @var string
      */
-    private $_tempdirectory = __DIR__;
+    private $tempdirectory = __DIR__;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->_setup();
+        $this->setup();
     }
 
     /**
@@ -57,7 +57,7 @@ class SlimAppEncryptionOpenSsl implements SlimAppEncryptionInterface
         if (!$this->isInstalled()) {
             return false;
         }
-        if ($this->_keyExists()) {
+        if ($this->keyExists()) {
             return true;
         }
 
@@ -67,15 +67,15 @@ class SlimAppEncryptionOpenSsl implements SlimAppEncryptionInterface
             'private_key_type' => OPENSSL_KEYTYPE_RSA,
         ));
 
-        $privkeyFilename = $this->_getPrivateKeyFilename();
-        $publickeyFilename = $this->_getPublicKeyFilename();
+        $privkeyFilename = $this->getPrivateKeyFilename();
+        $publickeyFilename = $this->getPublicKeyFilename();
 
         openssl_pkey_export_to_file($privateKey, $privkeyFilename);
         $a_key = openssl_pkey_get_details($privateKey);
         file_put_contents($publickeyFilename, $a_key['key']);
         openssl_free_key($privateKey);
 
-        if ($this->_keyExists()) {
+        if ($this->keyExists()) {
             return true;
         }
 
@@ -99,7 +99,7 @@ class SlimAppEncryptionOpenSsl implements SlimAppEncryptionInterface
 
         $plaintext = gzcompress($plaintext);
 
-        $publicKey = openssl_pkey_get_public(file_get_contents($this->_getPublicKeyFilename()));
+        $publicKey = openssl_pkey_get_public(file_get_contents($this->getPublicKeyFilename()));
 
         if ($publicKey === false) {
             return $plaintext;
@@ -143,7 +143,7 @@ class SlimAppEncryptionOpenSsl implements SlimAppEncryptionInterface
 
         $encrypted = base64_decode($encrypted);
 
-        $privateKey = openssl_pkey_get_private(file_get_contents($this->_getPrivateKeyFilename()));
+        $privateKey = openssl_pkey_get_private(file_get_contents($this->getPrivateKeyFilename()));
 
         if ($privateKey === false) {
             return $encrypted;
@@ -177,7 +177,7 @@ class SlimAppEncryptionOpenSsl implements SlimAppEncryptionInterface
      */
     public function isInstalled()
     {
-        return $this->_initialized && $this->_opensslInstalled();
+        return $this->initialized && $this->opensslInstalled();
     }
 
     /**
@@ -185,10 +185,10 @@ class SlimAppEncryptionOpenSsl implements SlimAppEncryptionInterface
      *
      * @return string
      */
-    private function _setup()
+    private function setup()
     {
-        $this->_tempdirectory = __DIR__;
-        $this->_initialized = true;
+        $this->tempdirectory = __DIR__;
+        $this->initialized = true;
     }
 
     /**
@@ -196,7 +196,7 @@ class SlimAppEncryptionOpenSsl implements SlimAppEncryptionInterface
      *
      * @return bool
      */
-    private function _opensslInstalled()
+    private function opensslInstalled()
     {
         return extension_loaded('openssl');
     }
@@ -206,9 +206,9 @@ class SlimAppEncryptionOpenSsl implements SlimAppEncryptionInterface
      *
      * @return string
      */
-    private function _getPrivateKeyFilename()
+    private function getPrivateKeyFilename()
     {
-        return PathUtils::combinePathWithFile($this->_tempdirectory, self::PRIVATE_KEY_FILENAME);
+        return PathUtils::combinePathWithFile($this->tempdirectory, self::PRIVATE_KEY_FILENAME);
     }
 
     /**
@@ -216,9 +216,9 @@ class SlimAppEncryptionOpenSsl implements SlimAppEncryptionInterface
      *
      * @return string
      */
-    private function _getPublicKeyFilename()
+    private function getPublicKeyFilename()
     {
-        return PathUtils::combinePathWithFile($this->_tempdirectory, self::PUBLIC_KEY_FILENAME);
+        return PathUtils::combinePathWithFile($this->tempdirectory, self::PUBLIC_KEY_FILENAME);
     }
 
     /**
@@ -226,9 +226,9 @@ class SlimAppEncryptionOpenSsl implements SlimAppEncryptionInterface
      *
      * @return bool
      */
-    private function _keyExists()
+    private function keyExists()
     {
-        return file_exists($this->_getPrivateKeyFilename()) && file_exists($this->_getPublicKeyFilename());
+        return file_exists($this->getPrivateKeyFilename()) && file_exists($this->getPublicKeyFilename());
     }
 
     /**
@@ -241,13 +241,13 @@ class SlimAppEncryptionOpenSsl implements SlimAppEncryptionInterface
     {
         switch (strtolower($varname)) {
             case 'privatekeyfile':
-                return $this->_getPrivateKeyFilename();
+                return $this->getPrivateKeyFilename();
             case 'publickeyfile':
-                return $this->_getPublicKeyFilename();
+                return $this->getPublicKeyFilename();
             case 'keyexists':
-                return $this->_keyExists();
+                return $this->keyExists();
             case 'tempdirectory':
-                return $this->_tempdirectory;
+                return $this->tempdirectory;
         }
     }
 
@@ -261,7 +261,7 @@ class SlimAppEncryptionOpenSsl implements SlimAppEncryptionInterface
     {
         switch (strtolower($varname)) {
             case 'tempdirectory':
-                $this->_tempdirectory = $varvalue;
+                $this->tempdirectory = $varvalue;
         }
     }
 

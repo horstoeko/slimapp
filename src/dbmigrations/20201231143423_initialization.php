@@ -1,5 +1,7 @@
 <?php
 
+namespace horstoeko\slimapp\dbmigrations;
+
 use Phoenix\Migration\AbstractMigration;
 
 class Initialization extends AbstractMigration
@@ -17,7 +19,7 @@ class Initialization extends AbstractMigration
             ->addColumn('email', 'string', ['default' => '', 'length' => 1024])
             ->addColumn('admin', 'tinyinteger', ['default' => 0, 'length' => 4])
             ->create();
-     }
+    }
 
     protected function down(): void
     {

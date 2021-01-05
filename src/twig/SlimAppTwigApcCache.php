@@ -43,7 +43,8 @@ class SlimAppTwigApcCache implements TwigCacheInterface
     public function write(string $key, string $content): void
     {
         apc_store(
-            $key, [
+            $key,
+            [
             'data' => 'data://text/plain;base64,' . base64_encode($content),
             'timestamp' => time(),
             ]

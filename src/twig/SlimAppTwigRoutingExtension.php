@@ -55,15 +55,51 @@ class SlimAppTwigRoutingExtension extends SlimAppTwigExtension
     public function getFunctions()
     {
         return [
-            new TwigFunction('urlFor', array($this, 'urlFor'), array('is_safe' => array('html'))),
-            new TwigFunction('path_for', array($this, 'urlFor'), array('is_safe' => array('html'))),
-            new TwigFunction('urlForRaw', array($this, 'urlForRaw'), array('is_safe' => array('html'))),
-            new TwigFunction('path_for_raw', array($this, 'urlForRaw'), array('is_safe' => array('html'))),
-            new TwigFunction('fullUrlFor', array($this, 'fullUrlFor'), array('is_safe' => array('html'))),
-            new TwigFunction('is_current_url', array($this, 'currentUrlIs'), array('is_safe' => array('html'))),
-            new TwigFunction('current_url_starts_with', array($this, 'currentUrlStartsWith'), array('is_safe' => array('html'))),
-            new TwigFunction('urlExists', array($this, 'urlExists'), array('is_safe' => array('html'))),
-            new TwigFunction('currentUrl', array($this, 'getCurrentUrl'), array('is_safe' => array('html'))),
+            new TwigFunction(
+                'urlFor',
+                array($this, 'urlFor'),
+                array('is_safe' => array('html'))
+            ),
+            new TwigFunction(
+                'path_for',
+                array($this, 'urlFor'),
+                array('is_safe' => array('html'))
+            ),
+            new TwigFunction(
+                'urlForRaw',
+                array($this, 'urlForRaw'),
+                array('is_safe' => array('html'))
+            ),
+            new TwigFunction(
+                'path_for_raw',
+                array($this, 'urlForRaw'),
+                array('is_safe' => array('html'))
+            ),
+            new TwigFunction(
+                'fullUrlFor',
+                array($this, 'fullUrlFor'),
+                array('is_safe' => array('html'))
+            ),
+            new TwigFunction(
+                'is_current_url',
+                array($this, 'currentUrlIs'),
+                array('is_safe' => array('html'))
+            ),
+            new TwigFunction(
+                'current_url_starts_with',
+                array($this, 'currentUrlStartsWith'),
+                array('is_safe' => array('html'))
+            ),
+            new TwigFunction(
+                'urlExists',
+                array($this, 'urlExists'),
+                array('is_safe' => array('html'))
+            ),
+            new TwigFunction(
+                'currentUrl',
+                array($this, 'getCurrentUrl'),
+                array('is_safe' => array('html'))
+            ),
         ];
     }
 

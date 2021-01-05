@@ -53,8 +53,11 @@ class SlimAppMiddlewareBasicAuth extends SlimAppMiddlewareBase
      * @param SlimAppLoginManager $loginManager
      * @param array $options
      */
-    public function __construct(SlimAppLoginManager $loginManager, ResponseFactoryInterface $responseFactory, array $options)
-    {
+    public function __construct(
+        SlimAppLoginManager $loginManager,
+        ResponseFactoryInterface $responseFactory,
+        array $options
+    ) {
         $this->loginManager = $loginManager;
         $this->responseFactory = $responseFactory;
 
@@ -99,13 +102,19 @@ class SlimAppMiddlewareBasicAuth extends SlimAppMiddlewareBase
                 $allowedForward = false;
 
                 if (in_array("headers", $this->relaxed)) {
-                    if ($request->getHeaderLine("X-Forwarded-Proto") === "https" && $request->getHeaderLine('X-Forwarded-Port') === "443") {
+                    if ($request->getHeaderLine("X-Forwarded-Proto") === "https" &&
+                        $request->getHeaderLine('X-Forwarded-Port') === "443") {
                         $allowedForward = true;
                     }
                 }
 
                 if (!($allowedHost || $allowedForward)) {
-                    throw new \RuntimeException(sprintf("Insecure use of middleware over %s denied by configuration.", strtoupper($scheme)));
+                    throw new \RuntimeException(
+                        sprintf(
+                            "Insecure use of middleware over %s denied by configuration.",
+                            strtoupper($scheme)
+                        )
+                    );
                 }
             }
 
@@ -120,7 +129,14 @@ class SlimAppMiddlewareBasicAuth extends SlimAppMiddlewareBase
             }
 
             if ($this->loginManager->loginUser($username, $password) === false) {
-                return $this->responseFactory->createResponse()->withStatus(401)->withHeader("WWW-Authenticate", sprintf('Basic realm="%s"', $this->realm));
+                return $this->
+                    responseFactory->
+                    createResponse()->
+                    withStatus(401)->
+                    withHeader(
+                        "WWW-Authenticate",
+                        sprintf('Basic realm="%s"', $this->realm)
+                    );
             }
         }
 
@@ -145,9 +161,10 @@ class SlimAppMiddlewareBasicAuth extends SlimAppMiddlewareBase
             }
         } else {
             foreach ($this->relaxed as $relaxeditem) {
-                if (preg_match('/^([0-9]{1,3}\.){3}[0-9]{1,3}(\/([0-9]|[1-2][0-9]|3[0-2]))?$/im', $relaxeditem) && ($this->cidr_match($host, $relaxeditem))) {
+                if (preg_match('/^([0-9]{1,3}\.){3}[0-9]{1,3}(\/([0-9]|[1-2][0-9]|3[0-2]))?$/im', $relaxeditem) &&
+                ($this->cidrMatch($host, $relaxeditem))) {
                     return true;
-                } else if ($host == $relaxeditem) {
+                } elseif ($host == $relaxeditem) {
                     return true;
                 }
             }
@@ -163,7 +180,7 @@ class SlimAppMiddlewareBasicAuth extends SlimAppMiddlewareBase
      * @param string $cidr
      * @return boolean
      */
-    protected function cidr_match(string $ip, string $cidr): bool
+    protected function cidrMatch(string $ip, string $cidr): bool
     {
         list($subnet, $mask) = explode('/', $cidr);
 

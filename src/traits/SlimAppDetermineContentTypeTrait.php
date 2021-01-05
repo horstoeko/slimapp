@@ -49,6 +49,8 @@ trait SlimAppDetermineContentTypeTrait
 
     protected function isXmlRequest(Request $request)
     {
-        return (stripos($this->determineContentType($request), "text/xml") === 0 ) || stripos($this->determineContentType($request), "application/xml") === 0;
+        return
+            (stripos($this->determineContentType($request), "text/xml") === 0 ) ||
+            (stripos($this->determineContentType($request), "application/xml") === 0);
     }
 }

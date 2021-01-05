@@ -14,35 +14,35 @@ class SlimAppEncryptionOpenSslExt implements SlimAppEncryptionInterface
      *
      * @var \MiladRahimi\PhpCrypt\Symmetric
      */
-    private $_symetric = null;
+    private $symetric = null;
 
     /**
      * Encryption method
      *
      * @var string
      */
-    private $_method = "aes-256-cbc";
+    private $method = "aes-256-cbc";
 
     /**
      * Secret key
      *
      * @var string
      */
-    private $_key = "2Tn)O=AQ%_&>/YZR@.PY@k@KG";
+    private $key = "2Tn)O=AQ%_&>/YZR@.PY@k@KG";
 
     /**
      * Flag, that the component is initialized
      *
      * @var boolean
      */
-    private $_initialized = false;
+    private $initialized = false;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->_setup();
+        $this->setup();
     }
 
     /**
@@ -67,7 +67,7 @@ class SlimAppEncryptionOpenSslExt implements SlimAppEncryptionInterface
             return $plaintext;
         }
 
-        return $this->_getSymetric()->encrypt($plaintext);
+        return $this->getSymetric()->encrypt($plaintext);
     }
 
     /**
@@ -82,7 +82,7 @@ class SlimAppEncryptionOpenSslExt implements SlimAppEncryptionInterface
             return $encrypted;
         }
 
-        return $this->_getSymetric()->decrypt($encrypted);
+        return $this->getSymetric()->decrypt($encrypted);
     }
 
     /**
@@ -92,7 +92,7 @@ class SlimAppEncryptionOpenSslExt implements SlimAppEncryptionInterface
      */
     public function isInstalled()
     {
-        return $this->_initialized && $this->_opensslInstalled();
+        return $this->initialized && $this->opensslInstalled();
     }
 
     /**
@@ -100,9 +100,9 @@ class SlimAppEncryptionOpenSslExt implements SlimAppEncryptionInterface
      *
      * @return string
      */
-    private function _setup()
+    private function setup()
     {
-        $this->_initialized = true;
+        $this->initialized = true;
     }
 
     /**
@@ -110,13 +110,13 @@ class SlimAppEncryptionOpenSslExt implements SlimAppEncryptionInterface
      *
      * @return Symetric
      */
-    private function _getSymetric()
+    private function getSymetric()
     {
-        if ($this->_symetric == null) {
-            $this->_symetric = new Symmetric($this->_key, $this->_method);
+        if ($this->symetric == null) {
+            $this->symetric = new Symmetric($this->key, $this->method);
         }
 
-        return $this->_symetric;
+        return $this->symetric;
     }
 
     /**
@@ -124,7 +124,7 @@ class SlimAppEncryptionOpenSslExt implements SlimAppEncryptionInterface
      *
      * @return bool
      */
-    private function _opensslInstalled()
+    private function opensslInstalled()
     {
         return extension_loaded('openssl');
     }
@@ -139,9 +139,9 @@ class SlimAppEncryptionOpenSslExt implements SlimAppEncryptionInterface
     {
         switch (strtolower($varname)) {
             case 'method':
-                return $this->_method;
+                return $this->method;
             case 'key':
-                return $this->_key;
+                return $this->key;
         }
     }
 
@@ -155,9 +155,11 @@ class SlimAppEncryptionOpenSslExt implements SlimAppEncryptionInterface
     {
         switch (strtolower($varname)) {
             case 'method':
-                $this->_method = $varvalue;
+                $this->method = $varvalue;
+                break;
             case 'key':
-                $this->_key = $varvalue;
+                $this->key = $varvalue;
+                break;
         }
     }
 
@@ -171,9 +173,9 @@ class SlimAppEncryptionOpenSslExt implements SlimAppEncryptionInterface
     {
         switch (strtolower($varname)) {
             case 'method':
-                return isset($this->_method);
+                return isset($this->method);
             case 'key':
-                return isset($this->_key);
+                return isset($this->key);
         }
     }
 }

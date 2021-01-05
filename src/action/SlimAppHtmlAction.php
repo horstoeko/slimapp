@@ -42,6 +42,10 @@ abstract class SlimAppHtmlAction extends SlimAppBaseAction
      */
     protected function respondWithData($data = null, int $statusCode = 200): Response
     {
-        return $this->twig->renderExtended($this->response, $this->resolveTemplate(), $data ?? [])->withStatus($statusCode);
+        return $this->twig->renderExtended(
+            $this->response,
+            $this->resolveTemplate(),
+            $data ?? []
+        )->withStatus($statusCode);
     }
 }

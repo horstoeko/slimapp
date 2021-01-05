@@ -6,7 +6,7 @@ namespace horstoeko\slimapp\middleware;
 
 class SlimAppMiddlewareRestrictedRouteLight extends SlimAppMiddlewareRestrictedRoute
 {
-    protected function GetIsSignedIn()
+    protected function getIsSignedIn()
     {
         return $this->loginManager->IsSignedIn();
     }

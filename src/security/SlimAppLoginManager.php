@@ -157,8 +157,13 @@ class SlimAppLoginManager
      * @param string $email
      * @return integer
      */
-    public function createUser(string $username, string $password, string $firstname, string $lastname, string $email): int
-    {
+    public function createUser(
+        string $username,
+        string $password,
+        string $firstname,
+        string $lastname,
+        string $email
+    ): int {
         $userData = UserTable::where("username", "=", $username)->first();
 
         if ($userData) {
@@ -190,8 +195,13 @@ class SlimAppLoginManager
      * @param string $email
      * @return integer
      */
-    public function modifyUser(string $username, string $password, string $firstname, string $lastname, string $email): int
-    {
+    public function modifyUser(
+        string $username,
+        string $password,
+        string $firstname,
+        string $lastname,
+        string $email
+    ): int {
         $userData = UserTable::where("username", "=", $username)->first();
 
         if (!$userData) {

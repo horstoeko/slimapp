@@ -48,12 +48,12 @@ class SlimAppSecurityExtension extends SlimAppTwigExtension
     public function getFunctions()
     {
         return [
-            new TwigFunction('IsSignedIn', array($this, 'IsSignedIn')),
-            new TwigFunction('IsAdminSignedIn', array($this, 'IsAdminSignedIn')),
-            new TwigFunction('SignedInUser', array($this, 'SignedInUser')),
-            new TwigFunction('SignedInUserFirstname', array($this, 'SignedInUserFirstname')),
-            new TwigFunction('SignedInUserLastname', array($this, 'SignedInUserLastname')),
-            new TwigFunction('SignedInUserId', array($this, 'SignedInUserId')),
+            new TwigFunction('IsSignedIn', array($this, 'isSignedIn')),
+            new TwigFunction('IsAdminSignedIn', array($this, 'isAdminSignedIn')),
+            new TwigFunction('SignedInUser', array($this, 'signedInUser')),
+            new TwigFunction('SignedInUserFirstname', array($this, 'signedInUserFirstname')),
+            new TwigFunction('SignedInUserLastname', array($this, 'signedInUserLastname')),
+            new TwigFunction('SignedInUserId', array($this, 'signedInUserId')),
         ];
     }
 
@@ -62,7 +62,7 @@ class SlimAppSecurityExtension extends SlimAppTwigExtension
      *
      * @return bool
      */
-    public function IsSignedIn()
+    public function isSignedIn()
     {
         return $this->loginManager->isSignedIn();
     }
@@ -72,7 +72,7 @@ class SlimAppSecurityExtension extends SlimAppTwigExtension
      *
      * @return bool
      */
-    public function IsAdminSignedIn()
+    public function isAdminSignedIn()
     {
         return $this->loginManager->isAdminSignedIn();
     }
@@ -82,7 +82,7 @@ class SlimAppSecurityExtension extends SlimAppTwigExtension
      *
      * @return string
      */
-    public function SignedInUser()
+    public function signedInUser()
     {
         return $this->loginManager->signedInUserName();
     }
@@ -92,9 +92,9 @@ class SlimAppSecurityExtension extends SlimAppTwigExtension
      *
      * @return string
      */
-    public function SignedInUserFirstname()
+    public function signedInUserFirstname()
     {
-        return $this->loginManager->SignedInUserFirstname();
+        return $this->loginManager->signedInUserFirstname();
     }
 
     /**
@@ -102,9 +102,9 @@ class SlimAppSecurityExtension extends SlimAppTwigExtension
      *
      * @return string
      */
-    public function SignedInUserLastname()
+    public function signedInUserLastname()
     {
-        return $this->loginManager->SignedInUserLastname();
+        return $this->loginManager->signedInUserLastname();
     }
 
     /**
@@ -112,8 +112,8 @@ class SlimAppSecurityExtension extends SlimAppTwigExtension
      *
      * @return string
      */
-    public function SignedInUserId()
+    public function signedInUserId()
     {
-        return $this->loginManager->SignedInUserId();
+        return $this->loginManager->signedInUserId();
     }
 }

@@ -55,7 +55,7 @@ class SlimAppMiddlewareLocale extends SlimAppMiddlewareBase
     /**
      * @var \Psr\Http\Message\ServerRequestInterface
      */
-    private $_request;
+    private $request;
 
     /**
      * @var \Symfony\Component\Translation\Translator
@@ -103,9 +103,9 @@ class SlimAppMiddlewareLocale extends SlimAppMiddlewareBase
      */
     public function process(Request $request, RequestHandler $handler): Response
     {
-        $this->_request = $request;
+        $this->request = $request;
 
-        $this->_findLanguage();
+        $this->findLanguage();
 
         // Handle Request and Response
 
@@ -131,7 +131,12 @@ class SlimAppMiddlewareLocale extends SlimAppMiddlewareBase
                 continue;
             }
 
-            $this->translator->addResource('php', $translationfile[0], $this->languageDefinition->language_complete, $translationfile[1]);
+            $this->translator->addResource(
+                'php',
+                $translationfile[0],
+                $this->languageDefinition->language_complete,
+                $translationfile[1]
+            );
         }
 
         // Handle System Locale
@@ -162,16 +167,16 @@ class SlimAppMiddlewareLocale extends SlimAppMiddlewareBase
      *
      * @return string
      */
-    private function _findLanguage()
+    private function findLanguage()
     {
         $language = false;
 
         if ($this->overridelanguagecode) {
-            $language = $this->_matchoverridelanguage($this->overridelanguagecode);
+            $language = $this->matchoverridelanguage($this->overridelanguagecode);
         }
 
         if (!$language) {
-            $language = $this->_matchheader($this->_request->getHeader("Accept-language"));
+            $language = $this->matchheader($this->request->getHeader("Accept-language"));
         }
 
         if (!$language) {
@@ -183,13 +188,20 @@ class SlimAppMiddlewareLocale extends SlimAppMiddlewareBase
         }
 
         $this->languageDefinition = new \stdClass();
-        $this->languageDefinition->language_complete = $language;
-        $this->languageDefinition->language = $this->_getLanguageFromCode($language);
-        $this->languageDefinition->country = $this->_getCountryFromCode($language);
-        $this->languageDefinition->locale_1 = $this->dosetlocale ? $this->_mapLanguageCodeToLocale($language) : null;
-        $this->languageDefinition->locale_2 = $this->dosetlocale ? $this->_mapLanguageCodeToLocale($this->defaultlanguagecode) : null;
-        $this->languageDefinition->ContentLanguage = $this->_languageCodeToContentLanguageCode($language);
-        $this->languageDefinition->ContentLanguage2 = $this->_languageCodeToContentLanguageCode2($language);
+        $this->languageDefinition->language_complete =
+            $language;
+        $this->languageDefinition->language =
+            $this->getLanguageFromCode($language);
+        $this->languageDefinition->country =
+            $this->getCountryFromCode($language);
+        $this->languageDefinition->locale_1 =
+            $this->dosetlocale ? $this->mapLanguageCodeToLocale($language) : null;
+        $this->languageDefinition->locale_2 =
+            $this->dosetlocale ? $this->mapLanguageCodeToLocale($this->defaultlanguagecode) : null;
+        $this->languageDefinition->ContentLanguage =
+            $this->languageCodeToContentLanguageCode($language);
+        $this->languageDefinition->ContentLanguage2 =
+            $this->languageCodeToContentLanguageCode2($language);
 
         return $this->languageDefinition;
     }
@@ -203,15 +215,15 @@ class SlimAppMiddlewareLocale extends SlimAppMiddlewareBase
      *
      * @return mixed (string | boolean)
      */
-    private function _match($list)
+    private function match($list)
     {
         arsort($list);
 
         foreach ($list as $l => $w) {
-            $currentlanguagecode = $this->_normalizeCode($l);
+            $currentlanguagecode = $this->normalizeCode($l);
 
             foreach ($this->availablelanguagecodes as $availablelanguagecode) {
-                $availablelanguagecode = $this->_normalizeCode($availablelanguagecode);
+                $availablelanguagecode = $this->normalizeCode($availablelanguagecode);
 
                 if ($this->strictmatchlanguagecode) {
                     if ($availablelanguagecode == $currentlanguagecode) {
@@ -237,21 +249,21 @@ class SlimAppMiddlewareLocale extends SlimAppMiddlewareBase
      *
      * @return mixed
      */
-    private function _matchheader($headers)
+    private function matchheader($headers)
     {
         $headers = explode(",", implode(",", $headers));
         $prefs = [];
 
         foreach ($headers as $str) {
             list($l, $w) = array_merge(explode(";q=", $str), ["1.0"]);
-            $code = $this->_sanitiseCode($l);
+            $code = $this->sanitiseCode($l);
 
-            if ($this->_isValidCode($code)) {
+            if ($this->isValidCode($code)) {
                 $prefs[$code] = (float) $w;
             }
         };
 
-        return $this->_match($prefs);
+        return $this->match($prefs);
     }
 
     /**
@@ -263,12 +275,12 @@ class SlimAppMiddlewareLocale extends SlimAppMiddlewareBase
      *
      * @return mixed
      */
-    private function _matchoverridelanguage($str = null)
+    private function matchoverridelanguage($str = null)
     {
-        $code = $this->_sanitiseCode($str);
+        $code = $this->sanitiseCode($str);
 
-        if ($this->_isValidCode($code)) {
-            return $this->_match([
+        if ($this->isValidCode($code)) {
+            return $this->match([
                 $code => 1,
             ]);
         }
@@ -283,7 +295,7 @@ class SlimAppMiddlewareLocale extends SlimAppMiddlewareBase
      *
      * @return void
      */
-    private function _sanitiseCode($str)
+    private function sanitiseCode($str)
     {
         return preg_replace("/[^a-zA-Z\_\-]/", "", $str);
     }
@@ -297,7 +309,7 @@ class SlimAppMiddlewareLocale extends SlimAppMiddlewareBase
      * @return void
      *
      */
-    private function _normalizeCode($str)
+    private function normalizeCode($str)
     {
         $sp = explode("_", strtolower(str_replace('-', '_', $str)));
         $nd = strtolower($sp[0]) . '_' . (isset($sp[1]) ? strtoupper($sp[1]) : strtoupper($sp[0]));
@@ -314,9 +326,9 @@ class SlimAppMiddlewareLocale extends SlimAppMiddlewareBase
      * @return void
      *
      */
-    private function _getLanguageFromCode($str)
+    private function getLanguageFromCode($str)
     {
-        $sp = explode("_", $this->_normalizeCode($str));
+        $sp = explode("_", $this->normalizeCode($str));
         return $sp[0];
     }
 
@@ -329,9 +341,9 @@ class SlimAppMiddlewareLocale extends SlimAppMiddlewareBase
      * @return void
      *
      */
-    private function _getCountryFromCode($str)
+    private function getCountryFromCode($str)
     {
-        $sp = explode("_", $this->_normalizeCode($str));
+        $sp = explode("_", $this->normalizeCode($str));
         return $sp[1];
     }
 
@@ -344,7 +356,7 @@ class SlimAppMiddlewareLocale extends SlimAppMiddlewareBase
      *
      * @author Ian Grindley
      */
-    private function _isValidCode($str)
+    private function isValidCode($str)
     {
         if (1 === preg_match("/(^[a-z]{2}$|^[a-z]{2}(_|-)[a-z|A-Z]{2}$)/", $str)) {
             return true;
@@ -360,9 +372,11 @@ class SlimAppMiddlewareLocale extends SlimAppMiddlewareBase
      *
      * @return string
      */
-    private function _mapLanguageCodeToLocale($languageCode)
+    private function mapLanguageCodeToLocale($languageCode)
     {
-        return isset($this->languagelocalemaps[$languageCode]) ? $this->languagelocalemaps[$languageCode] : $languageCode;
+        return isset($this->languagelocalemaps[$languageCode]) ?
+            $this->languagelocalemaps[$languageCode] :
+            $languageCode;
     }
 
     /**
@@ -373,9 +387,9 @@ class SlimAppMiddlewareLocale extends SlimAppMiddlewareBase
      *
      * @return <type>
      */
-    protected function _languageCodeToContentLanguageCode($languageCode)
+    protected function languageCodeToContentLanguageCode($languageCode)
     {
-        return $this->_getLanguageFromCode($languageCode); // . "-" . $this->_getCountryFromCode($languageCode);
+        return $this->getLanguageFromCode($languageCode); // . "-" . $this->getCountryFromCode($languageCode);
     }
 
     /**
@@ -385,8 +399,8 @@ class SlimAppMiddlewareLocale extends SlimAppMiddlewareBase
      *
      * @return <type>
      */
-    protected function _languageCodeToContentLanguageCode2($languageCode)
+    protected function languageCodeToContentLanguageCode2($languageCode)
     {
-        return $this->_getLanguageFromCode($languageCode) . "-" . $this->_getCountryFromCode($languageCode);
+        return $this->getLanguageFromCode($languageCode) . "-" . $this->getCountryFromCode($languageCode);
     }
 }

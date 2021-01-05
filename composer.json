@@ -70,7 +70,12 @@
     },
     "scripts": {
         "tests": "./vendor/bin/phpunit ./tests/",
-        "phpcs": "./vendor/bin/phpcs --standard=./build/phpcsrules.xml --extensions=php --ignore=autoload.php ./src ./tests",
+        "phpcs": "./vendor/bin/phpcs --standard=./build/phpcsrules.xml --extensions=php --ignore=autoload.php ./src",
+        "phpcs2": "./vendor/bin/phpcs --standard=PSR2 --extensions=php --ignore=autoload.php ./src",
+        "phpcs12": "./vendor/bin/phpcs --standard=./build/phpcsrules_psr12.xml --extensions=php --ignore=autoload.php ./src",
+        "phpcbf": "./vendor/bin/phpcbf --standard=./build/phpcsrules.xml --extensions=php --ignore=autoload.php ./src",
+        "phpcbf2": "./vendor/bin/phpcbf --standard=PSR2 --extensions=php --ignore=autoload.php ./src",
+        "phpcbf12": "./vendor/bin/phpcbf --standard=./build/phpcsrules_psr12.xml --extensions=php --ignore=autoload.php ./src",
         "phpstan": "./vendor/bin/phpstan analyze -c ./build/phpstan.neon --autoload-file=vendor/autoload.php --no-interaction --no-progress --error-format=table"
     }
 }
