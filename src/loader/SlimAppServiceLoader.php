@@ -18,6 +18,8 @@ class SlimAppServiceLoader extends SlimAppBaseLoader
      */
     public function __construct(ContainerBuilder $containerBuilder)
     {
+        parent::__construct();
+
         $this->containerBuilder = $containerBuilder;
     }
 

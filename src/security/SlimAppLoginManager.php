@@ -6,7 +6,7 @@ namespace horstoeko\slimapp\security;
 
 use horstoeko\slimapp\crypt\SlimAppQuickEncryption;
 use Illuminate\Database\Capsule\Manager as Capsule;
-use horstoeko\slimapp\dbtables\User as UserTable;
+use horstoeko\slimapp\baseapp\dbtables\User as UserTable;
 use SlimSession\Helper as SessionHelper;
 
 class SlimAppLoginManager

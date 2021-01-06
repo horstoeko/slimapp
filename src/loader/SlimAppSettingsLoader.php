@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace horstoeko\slimapp\loader;
 
 use DI\ContainerBuilder;
+use horstoeko\stringmanagement\PathUtils;
 
 class SlimAppSettingsLoader extends SlimAppBaseLoader
 {
@@ -18,6 +19,8 @@ class SlimAppSettingsLoader extends SlimAppBaseLoader
      */
     public function __construct(ContainerBuilder $containerBuilder)
     {
+        parent::__construct();
+
         $this->containerBuilder = $containerBuilder;
     }
 
@@ -27,8 +30,8 @@ class SlimAppSettingsLoader extends SlimAppBaseLoader
     protected function getFiles(): array
     {
         return [
-            __DIR__ . "/../etc/settings.php",
-            __DIR__ . "/../../../../../etc/settings.php",
+            PathUtils::combinePathWithFile($this->directories->getvendorsettingsdirectory(), "settings.php"),
+            PathUtils::combinePathWithFile($this->directories->getcustomsettingsdirectory(), "settings.php"),
         ];
     }
 

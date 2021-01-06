@@ -4,8 +4,15 @@ declare(strict_types=1);
 
 namespace horstoeko\slimapp\loader;
 
+use horstoeko\slimapp\system\SlimAppDirectories;
+
 abstract class SlimAppBaseLoader
 {
+    /**
+     * @var \horstoeko\slimapp\system\SlimAppDirectories
+     */
+    protected $directories;
+
     /**
      * Returns the files which are to load
      *
@@ -21,6 +28,11 @@ abstract class SlimAppBaseLoader
      * @return void
      */
     abstract protected function onAfterLoad(array $content): void;
+
+    public function __construct()
+    {
+        $this->directories = new SlimAppDirectories;
+    }
 
     /**
      * Load the files

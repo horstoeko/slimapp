@@ -18,6 +18,8 @@ class SlimAppMiddlewareLoader extends SlimAppBaseLoader
      */
     public function __construct(App $app)
     {
+        parent::__construct();
+
         $this->app = $app;
     }
 

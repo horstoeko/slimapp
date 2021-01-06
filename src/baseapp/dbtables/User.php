@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace horstoeko\slimapp\dbtables;
+namespace horstoeko\slimapp\baseapp\dbtables;
 
 use horstoeko\slimapp\eloquent\ModelWithEncryption as Eloquent;
 
