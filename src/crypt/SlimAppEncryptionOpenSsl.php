@@ -27,7 +27,7 @@ class SlimAppEncryptionOpenSsl implements SlimAppEncryptionInterface
     /**
      * @var string
      */
-    private $tempdirectory = __DIR__;
+    private $tempdirectory;
 
     /**
      * Constructor
@@ -187,7 +187,7 @@ class SlimAppEncryptionOpenSsl implements SlimAppEncryptionInterface
      */
     private function setup()
     {
-        $this->tempdirectory = __DIR__;
+        $this->tempdirectory = __DIR__ . "/../../../../../var/ssl";
         $this->initialized = true;
     }
 
