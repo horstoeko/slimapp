@@ -143,7 +143,7 @@ class SlimAppDirectories
                 0,
                 strlen($this->documentRoot . DIRECTORY_SEPARATOR) - 1
             );
-            $this->dirBase = PathUtils::combineAllPaths($this->documentRoot, $this->subDirName);
+            $this->dirBase = realpath(PathUtils::combineAllPaths($this->documentRoot, $this->subDirName, ".."));
         }
     }
 

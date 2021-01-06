@@ -29,19 +29,25 @@ use Symfony\Component\Translation\Translator as SymfonyTranslator;
 use Twig\Extra\Markdown\MarkdownExtension as TwigMarkdownExtension;
 use horstoeko\slimapp\middleware\SlimAppMiddlewareRestrictedRouteAdmin;
 use horstoeko\slimapp\middleware\SlimAppMiddlewareRestrictedRouteLight;
+use horstoeko\slimapp\system\SlimAppDirectories;
+use horstoeko\stringmanagement\PathUtils;
 use Twig\RuntimeLoader\RuntimeLoaderInterface as TwigRuntimeLoaderInterface;
 use Symfony\Component\Translation\Loader\ArrayLoader as SymfonyTranslatorArrayLoader;
 use Symfony\Component\Translation\Loader\PhpFileLoader as SymfonyTranslatorPhpFileLoader;
 use Symfony\Bridge\Twig\Extension\TranslationExtension as SymfonyTwigBridgeTranslationExtension;
 
 return [
-    LoggerInterface::class => function (ContainerInterface $c) {
+    SlimAppDirectories::class => function () {
+        return new SlimAppDirectories();
+    },
+
+    LoggerInterface::class => function (SlimAppDirectories $directories, ContainerInterface $c) {
         $settings = $c->get('settings');
         $loggerSettings = $settings['logger'] ?? [];
 
         $logger = new Logger($loggerSettings['name']);
         $processor = new UidProcessor();
-        $handler = new StreamHandler($loggerSettings['path'], $loggerSettings['level']);
+        $handler = new StreamHandler(PathUtils::combinePathWithFile($directories->gettemporarylogdirectory(), "app.log"), $loggerSettings['level']);
 
         $logger->pushProcessor($processor);
         $logger->pushHandler($handler);
@@ -76,14 +82,15 @@ return [
         ContainerInterface $c,
         SymfonyTranslator $translator,
         SlimAppLoginManager $loginManager,
-        Slim\App $app
+        Slim\App $app,
+        SlimAppDirectories $directories
     ) {
         $settings = $c->get('settings');
         $twigSettings = $settings['twig'] ?? [];
 
         switch ($twigSettings["cachemode"] ?? 0) {
             case 1:
-                $cache = __DIR__ . "/../../var/twig";
+                $cache = $directories->gettemporarytwigdirectory();
                 if (!is_dir($cache) || !is_writeable($cache)) {
                     $cache = false;
                 }
@@ -106,18 +113,18 @@ return [
                 $cache = false;
         }
 
-        $directories = [];
+        $dirCollection = [];
 
-        if (is_dir(__DIR__ . "/../baseapp/html")) {
-            $directories["slimbaseapp"] = __DIR__ . "/../baseapp/html";
+        if (is_dir($directories->getcustomtemplatesdirectory())) {
+            $dirCollection["slimbaseapp"] = $directories->getvendortemplatesdirectory();
         }
 
-        if (is_dir(__DIR__ . "/../../../../../app/html")) {
-            $directories["slimapp"] = __DIR__ . "/../../../../../app/html";
+        if (is_dir($directories->getvendortemplatesdirectory())) {
+            $dirCollection["slimapp"] = $directories->getcustomtemplatesdirectory();
         }
 
         $view = new SlimAppTwig(
-            $directories,
+            $dirCollection,
             [
                 'cache' => $cache,
                 'strict_variables' => $twigSettings["strict_variables"] ?? false,
@@ -195,11 +202,11 @@ return [
         return new SlimAppLoginManager($capsule, $sessionHelper);
     },
 
-    SlimAppMiddlewareLocale::class => function (ContainerInterface $c, SymfonyTranslator $translator) {
+    SlimAppMiddlewareLocale::class => function (ContainerInterface $c, SymfonyTranslator $translator, SlimAppDirectories $directories) {
         $settings = $c->get('settings');
         $localeSettings = $settings['locale'] ?? [];
 
-        $localeMiddleware = new SlimAppMiddlewareLocale($translator, $localeSettings);
+        $localeMiddleware = new SlimAppMiddlewareLocale($translator, $directories, $localeSettings);
 
         return $localeMiddleware;
     },

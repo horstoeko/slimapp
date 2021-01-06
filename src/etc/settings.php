@@ -8,7 +8,6 @@ return [
     'displayErrorDetails' => true,
     'logger' => [
         'name' => 'slim-app',
-        'path' => __DIR__ . '/../../../../../var/log/app.log',
         'level' => Logger::DEBUG,
     ],
     'session' => [],

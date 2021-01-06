@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace horstoeko\slimapp\middleware;
 
+use horstoeko\slimapp\system\SlimAppDirectories;
+use horstoeko\stringmanagement\FileUtils;
+use horstoeko\stringmanagement\PathUtils;
 use \Psr\Container\ContainerInterface;
 use \PSr\Http\Message\ResponseInterface as Response;
 use \Psr\Http\Message\ServerRequestInterface as Request;
@@ -63,14 +66,21 @@ class SlimAppMiddlewareLocale extends SlimAppMiddlewareBase
     private $translator;
 
     /**
+     * @var \horstoeko\slimapp\system\SlimAppDirectories
+     */
+    private $directories;
+
+    /**
      * Constructor
      *
      * @param Translator $translator
+     * @param SlimAppDirectories $directories
      * @param array $options
      */
-    public function __construct(Translator $translator, $options)
+    public function __construct(Translator $translator, SlimAppDirectories $directories, array $options)
     {
         $this->translator = $translator;
+        $this->directories = $directories;
 
         if (is_array($options)) {
             foreach ($options as $optionName => $optionValue) {
@@ -121,9 +131,11 @@ class SlimAppMiddlewareLocale extends SlimAppMiddlewareBase
 
         $this->translator->setLocale($this->languageDefinition->language_complete);
 
+        $translationfileName = FileUtils::combineFilenameWithFileextension($this->languageDefinition->language_complete, "php");
+
         $translationfiles = [
-            [__DIR__ . "/../etc/" . $this->languageDefinition->language_complete . '.php', "slimbaseapp"],
-            [__DIR__ . "/../../../../../etc/" . $this->languageDefinition->language_complete . '.php', "slimapp"],
+            [PathUtils::combinePathWithFile($this->directories->getvendorsettingsdirectory(), $translationfileName), "slimbaseapp"],
+            [PathUtils::combinePathWithFile($this->directories->getcustomsettingsdirectory(), $translationfileName), "slimapp"],
         ];
 
         foreach ($translationfiles as $translationfile) {

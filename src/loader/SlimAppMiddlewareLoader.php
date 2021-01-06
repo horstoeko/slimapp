@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace horstoeko\slimapp\loader;
 
 use Slim\App;
+use horstoeko\stringmanagement\PathUtils;
 
 class SlimAppMiddlewareLoader extends SlimAppBaseLoader
 {
@@ -29,8 +30,8 @@ class SlimAppMiddlewareLoader extends SlimAppBaseLoader
     protected function getFiles(): array
     {
         return [
-            __DIR__ . "/../etc/middleware.php",
-            __DIR__ . "/../../../../../etc/middleware.php",
+            PathUtils::combinePathWithFile($this->directories->getvendorsettingsdirectory(), "middleware.php"),
+            PathUtils::combinePathWithFile($this->directories->getcustomsettingsdirectory(), "middleware.php"),
         ];
     }
 
