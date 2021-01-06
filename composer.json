@@ -55,7 +55,8 @@
         "bryanjhv/slim-session": "^4",
         "horstoeko/stringmanagement": "^1",
         "miladrahimi/phpcrypt": "^5",
-        "symfony/console": "^5"
+        "symfony/console": "^5",
+        "respect/validation": "^2"
     },
     "require-dev": {
         "clean/phpdoc-md": "^0",
