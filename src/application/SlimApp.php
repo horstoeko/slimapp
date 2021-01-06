@@ -8,6 +8,7 @@ use Slim\App;
 use DI\ContainerBuilder;
 use Psr\Log\LoggerInterface;
 use Slim\Factory\AppFactory;
+use Psr\Container\ContainerInterface;
 use horstoeko\slimapp\loader\SlimAppRouteLoader;
 use horstoeko\slimapp\loader\SlimAppServiceLoader;
 use horstoeko\slimapp\loader\SlimAppSettingsLoader;
@@ -37,6 +38,17 @@ class SlimApp
      */
     public static function run(): void
     {
+        $slimApplication = self::createApplication();
+        $slimApplication->runApplication();
+    }
+
+    /**
+     * Prepare the application. This is used in the console application
+     *
+     * @return SlimApp
+     */
+    public static function createApplication(): SlimApp
+    {
         $slimApplication = new self();
         $slimApplication->initContainerBuilder();
         $slimApplication->initSettings();
@@ -45,7 +57,30 @@ class SlimApp
         $slimApplication->initMiddlewares();
         $slimApplication->initRoutes();
         $slimApplication->initSystemMiddlewares();
-        $slimApplication->runApplication();
+
+        return $slimApplication;
+    }
+
+    /**
+     * Return the created container. This is used in the
+     * console application
+     *
+     * @return ContainerInterface
+     */
+    public function getContainer(): ContainerInterface
+    {
+        return $this->container;
+    }
+
+    /**
+     * Return the created Slim Application instance. This is used
+     * in the console application
+     *
+     * @return App
+     */
+    public function getCoreApplication(): App
+    {
+        return $this->app;
     }
 
     /**

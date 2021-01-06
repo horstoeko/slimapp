@@ -1,0 +1,6 @@
+#!/usr/bin/env php
+<?php
+
+/** Runner for Console **/
+
+include("SlimAppConsole.php");

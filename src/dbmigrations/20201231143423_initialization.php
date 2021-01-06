@@ -1,7 +1,5 @@
 <?php
-
-namespace horstoeko\slimapp\dbmigrations;
-
+// @codingStandardsIgnoreStart
 use Phoenix\Migration\AbstractMigration;
 
 class Initialization extends AbstractMigration
@@ -27,3 +25,4 @@ class Initialization extends AbstractMigration
             ->drop();
     }
 }
+// @codingStandardsIgnoreEnd

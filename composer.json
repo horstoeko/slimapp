@@ -54,7 +54,8 @@
         "lulco/phoenix": "^1",
         "bryanjhv/slim-session": "^4",
         "horstoeko/stringmanagement": "^1",
-        "miladrahimi/phpcrypt": "^5"
+        "miladrahimi/phpcrypt": "^5",
+        "symfony/console": "^5"
     },
     "require-dev": {
         "clean/phpdoc-md": "^0",
@@ -77,5 +78,6 @@
         "phpcbf2": "./vendor/bin/phpcbf --standard=PSR2 --extensions=php --ignore=autoload.php ./src",
         "phpcbf12": "./vendor/bin/phpcbf --standard=./build/phpcsrules_psr12.xml --extensions=php --ignore=autoload.php ./src",
         "phpstan": "./vendor/bin/phpstan analyze -c ./build/phpstan.neon --autoload-file=vendor/autoload.php --no-interaction --no-progress --error-format=table"
-    }
+    },
+    "bin": ["src/bin/SlimAppConsole"]
 }
