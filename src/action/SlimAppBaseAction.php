@@ -91,10 +91,27 @@ abstract class SlimAppBaseAction
      * @return mixed
      * @throws HttpBadRequestException
      */
-    protected function resolveQueryParma(string $name)
+    protected function resolveQueryParam(string $name)
     {
         if (!isset($this->queryParams[$name])) {
             throw new HttpBadRequestException($this->request, "Could not resolve query parameter `{$name}`.");
+        }
+
+        return $this->queryParams[$name];
+    }
+
+    /**
+     * Resolve a Query Parameter. If the parameter does not exist
+     * the default value will be returned
+     *
+     * @param string $name
+     * @param mixed $defaultValue
+     * @return mixed
+     */
+    protected function resolveQueryParamWithDefault(string $name, $defaultValue)
+    {
+        if (!isset($this->queryParams[$name])) {
+            return $defaultValue;
         }
 
         return $this->queryParams[$name];
