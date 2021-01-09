@@ -56,7 +56,8 @@
         "horstoeko/stringmanagement": "^1",
         "miladrahimi/phpcrypt": "^5",
         "symfony/console": "^5",
-        "respect/validation": "^2"
+        "respect/validation": "^2",
+        "illuminate/pagination": "^8"
     },
     "require-dev": {
         "clean/phpdoc-md": "^0",
