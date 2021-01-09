@@ -38,6 +38,11 @@ abstract class SlimAppBaseAction
     protected $args;
 
     /**
+     * @var array
+     */
+    protected $queryParams;
+
+    /**
      * @param LoggerInterface $logger
      * @param Capsule         $capsule
      */
@@ -60,6 +65,7 @@ abstract class SlimAppBaseAction
         $this->request = $request;
         $this->response = $response;
         $this->args = $args;
+        $this->queryParams = $request->getQueryParams();
 
         return $this->action();
     }
@@ -76,6 +82,22 @@ abstract class SlimAppBaseAction
         }
 
         return $this->args[$name];
+    }
+
+    /**
+     * Resolve a Query Parameter
+     *
+     * @param string $name
+     * @return mixed
+     * @throws HttpBadRequestException
+     */
+    protected function resolveQueryParma(string $name)
+    {
+        if (!isset($this->queryParams[$name])) {
+            throw new HttpBadRequestException($this->request, "Could not resolve query parameter `{$name}`.");
+        }
+
+        return $this->queryParams[$name];
     }
 
     /**
