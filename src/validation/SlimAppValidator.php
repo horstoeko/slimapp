@@ -106,12 +106,9 @@ class SlimAppValidator
                 }
                 $rule->assert($data[$field]);
             } catch (NestedValidationException $exception) {
-                /*
-                // TODO: Implement translator in Validator
                 $exception->setParam('translator', function ($message) {
                     return $this->translate($message);
                 });
-                */
                 $this->errors[$field] = $exception->getMessages();
             }
         }
