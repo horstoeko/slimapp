@@ -9,6 +9,7 @@ use Psr\Log\LoggerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Exception\HttpBadRequestException;
+use horstoeko\slimapp\validation\SlimAppValidator;
 
 abstract class SlimAppBaseAction
 {
@@ -21,6 +22,11 @@ abstract class SlimAppBaseAction
      * @var Capsule
      */
     protected $capsule;
+
+    /**
+     * @var SlimAppValidator
+     */
+    protected $validator;
 
     /**
      * @var Request
@@ -46,10 +52,11 @@ abstract class SlimAppBaseAction
      * @param LoggerInterface $logger
      * @param Capsule         $capsule
      */
-    public function __construct(LoggerInterface $logger, Capsule $capsule)
+    public function __construct(LoggerInterface $logger, Capsule $capsule, SlimAppValidator $validator)
     {
         $this->logger = $logger;
         $this->capsule = $capsule;
+        $this->validator = $validator;
     }
 
     /**

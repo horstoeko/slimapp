@@ -35,6 +35,7 @@ use Twig\RuntimeLoader\RuntimeLoaderInterface as TwigRuntimeLoaderInterface;
 use Symfony\Component\Translation\Loader\ArrayLoader as SymfonyTranslatorArrayLoader;
 use Symfony\Component\Translation\Loader\PhpFileLoader as SymfonyTranslatorPhpFileLoader;
 use Symfony\Bridge\Twig\Extension\TranslationExtension as SymfonyTwigBridgeTranslationExtension;
+use horstoeko\slimapp\validation\SlimAppValidator;
 
 return [
     SlimAppDirectories::class => function () {
@@ -200,6 +201,13 @@ return [
 
     SlimAppLoginManager::class => function (Capsule $capsule, SessionHelper $sessionHelper) {
         return new SlimAppLoginManager($capsule, $sessionHelper);
+    },
+
+    SlimAppValidator::class => function (ContainerInterface $c, SymfonyTranslator $translator, SessionHelper $sessionHelper) {
+        $settings = $c->get('settings');
+        $validatorSettings = $settings['validator'] ?? [];
+
+        return new SlimAppValidator($translator, $sessionHelper, $validatorSettings);
     },
 
     SlimAppMiddlewareLocale::class => function (ContainerInterface $c, SymfonyTranslator $translator, SlimAppDirectories $directories) {

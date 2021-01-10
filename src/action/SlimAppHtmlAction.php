@@ -8,6 +8,7 @@ use horstoeko\slimapp\twig\SlimAppTwig;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Psr\Log\LoggerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
+use horstoeko\slimapp\validation\SlimAppValidator;
 
 abstract class SlimAppHtmlAction extends SlimAppBaseAction
 {
@@ -20,9 +21,9 @@ abstract class SlimAppHtmlAction extends SlimAppBaseAction
      * @param LoggerInterface $logger
      * @param SlimAppTwig     $twig
      */
-    public function __construct(LoggerInterface $logger, Capsule $capsule, SlimAppTwig $twig)
+    public function __construct(LoggerInterface $logger, Capsule $capsule, SlimAppValidator $validator, SlimAppTwig $twig)
     {
-        parent::__construct($logger, $capsule);
+        parent::__construct($logger, $capsule, $validator);
 
         $this->twig = $twig;
     }
