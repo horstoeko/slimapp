@@ -9,6 +9,7 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 use Psr\Log\LoggerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use horstoeko\slimapp\validation\SlimAppValidator;
+use Symfony\Component\Translation\Translator;
 
 abstract class SlimAppHtmlAction extends SlimAppBaseAction
 {
@@ -21,9 +22,9 @@ abstract class SlimAppHtmlAction extends SlimAppBaseAction
      * @param LoggerInterface $logger
      * @param SlimAppTwig     $twig
      */
-    public function __construct(LoggerInterface $logger, Capsule $capsule, SlimAppValidator $validator, SlimAppTwig $twig)
+    public function __construct(LoggerInterface $logger, Capsule $capsule, SlimAppValidator $validator, Translator $translator, SlimAppTwig $twig)
     {
-        parent::__construct($logger, $capsule, $validator);
+        parent::__construct($logger, $capsule, $validator, $translator);
 
         $this->twig = $twig;
     }
