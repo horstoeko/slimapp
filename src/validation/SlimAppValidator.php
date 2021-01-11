@@ -139,9 +139,6 @@ class SlimAppValidator
      */
     private function translate($message)
     {
-        if (!isset($this->container)) {
-            return $message;
-        }
         return $this->translator->trans($message, [], $this->translationDomain);
     }
 
