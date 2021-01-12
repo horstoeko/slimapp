@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace horstoeko\slimapp\action;
 
-use horstoeko\slimapp\twig\SlimAppTwig;
-use Illuminate\Database\Capsule\Manager as Capsule;
 use Psr\Log\LoggerInterface;
-use Psr\Http\Message\ResponseInterface as Response;
-use horstoeko\slimapp\validation\SlimAppValidator;
+use horstoeko\slimapp\twig\SlimAppTwig;
 use Symfony\Component\Translation\Translator;
+use horstoeko\slimapp\validation\SlimAppValidator;
+use horstoeko\slimapp\security\SlimAppLoginManager;
+use Illuminate\Database\Capsule\Manager as Capsule;
+use Psr\Http\Message\ResponseInterface as Response;
 
 abstract class SlimAppHtmlAction extends SlimAppBaseAction
 {
@@ -22,9 +23,9 @@ abstract class SlimAppHtmlAction extends SlimAppBaseAction
      * @param LoggerInterface $logger
      * @param SlimAppTwig     $twig
      */
-    public function __construct(LoggerInterface $logger, Capsule $capsule, SlimAppValidator $validator, Translator $translator, SlimAppTwig $twig)
+    public function __construct(LoggerInterface $logger, Capsule $capsule, SlimAppValidator $validator, Translator $translator, SlimAppLoginManager $loginManager, SlimAppTwig $twig)
     {
-        parent::__construct($logger, $capsule, $validator, $translator);
+        parent::__construct($logger, $capsule, $validator, $translator, $loginManager);
 
         $this->twig = $twig;
     }

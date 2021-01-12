@@ -11,6 +11,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Exception\HttpBadRequestException;
 use horstoeko\slimapp\validation\SlimAppValidator;
 use Symfony\Component\Translation\Translator;
+use horstoeko\slimapp\security\SlimAppLoginManager;
 
 abstract class SlimAppBaseAction
 {
@@ -33,6 +34,11 @@ abstract class SlimAppBaseAction
      * @var Translator
      */
     protected $translator;
+
+    /**
+     * @var SlimAppLoginManager
+     */
+    protected $loginManager;
 
     /**
      * @var Request
@@ -58,12 +64,13 @@ abstract class SlimAppBaseAction
      * @param LoggerInterface $logger
      * @param Capsule         $capsule
      */
-    public function __construct(LoggerInterface $logger, Capsule $capsule, SlimAppValidator $validator, Translator $translator)
+    public function __construct(LoggerInterface $logger, Capsule $capsule, SlimAppValidator $validator, Translator $translator, SlimAppLoginManager $loginManager)
     {
         $this->logger = $logger;
         $this->capsule = $capsule;
         $this->validator = $validator;
         $this->translator = $translator;
+        $this->loginManager = $loginManager;
     }
 
     /**
