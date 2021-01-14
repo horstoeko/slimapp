@@ -13,6 +13,7 @@ use horstoeko\slimapp\loader\SlimAppRouteLoader;
 use horstoeko\slimapp\loader\SlimAppServiceLoader;
 use horstoeko\slimapp\loader\SlimAppSettingsLoader;
 use horstoeko\slimapp\loader\SlimAppMiddlewareLoader;
+use horstoeko\slimapp\loader\SlimAppConsoleCommandsLoader;
 
 class SlimApp
 {
@@ -52,6 +53,7 @@ class SlimApp
         $slimApplication = new self();
         $slimApplication->initContainerBuilder();
         $slimApplication->initSettings();
+        $slimApplication->initConsoleCommands();
         $slimApplication->initServices();
         $slimApplication->initSlimmApp();
         $slimApplication->initMiddlewares();
@@ -166,6 +168,17 @@ class SlimApp
         $this->app->addBodyParsingMiddleware();
         $this->app->addRoutingMiddleware();
         $this->app->addErrorMiddleware($displayErrorDetails, true, true, $logger);
+    }
+
+    /**
+     * Initialize commands for the console application
+     *
+     * @return void
+     */
+    public function initConsoleCommands(): void
+    {
+        $loader = new SlimAppConsoleCommandsLoader($this->containerBuilder);
+        $loader->load();
     }
 
     /**
