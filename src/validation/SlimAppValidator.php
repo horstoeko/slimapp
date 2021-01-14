@@ -85,7 +85,7 @@ class SlimAppValidator
      */
     public function validateRequest(Request &$request, array $rules): SlimAppValidator
     {
-        return $this->ValidateData($request->getParsedBody(), $rules);
+        return $this->validateData($request->getParsedBody(), $rules);
     }
 
     /**
@@ -95,7 +95,7 @@ class SlimAppValidator
      * @param array $rules
      * @return SlimAppValidator
      */
-    public function ValidateData(array $data, array $rules): SlimAppValidator
+    public function validateData(array $data, array $rules): SlimAppValidator
     {
         $this->clearErrors();
 
@@ -123,7 +123,7 @@ class SlimAppValidator
      *
      * @return SlimAppValidator
      */
-    public function StoreErrorsInSession()
+    public function storeErrorsInSession()
     {
         if ($this->dontStoreErrorsInSession !== false) {
             $this->sessionHelper->set(self::SESSION_NAMESPACE, $this->errors);
@@ -147,7 +147,7 @@ class SlimAppValidator
      *
      * @return bool
      */
-    public function Failed()
+    public function failed()
     {
         return !empty($this->errors);
     }
