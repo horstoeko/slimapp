@@ -45,6 +45,13 @@ abstract class SlimAppHtmlAction extends SlimAppBaseAction
      */
     protected function respondWithData($data = null, int $statusCode = 200): Response
     {
+        $this->twig->offsetSet("LocaleAll", $this->request->getAttribute("localeall"));
+        $this->twig->offsetSet("LanguageAll", $this->request->getAttribute("languageall"));
+        $this->twig->offsetSet("Language", $this->request->getAttribute("language"));
+        $this->twig->offsetSet("Country", $this->request->getAttribute("country"));
+        $this->twig->offsetSet("ContentLanguage", $this->request->getAttribute("contentlanguage"));
+        $this->twig->offsetSet("ContentLanguage2", $this->request->getAttribute("contentlanguage2"));
+
         return $this->twig->renderExtended(
             $this->response,
             $this->resolveTemplate(),
