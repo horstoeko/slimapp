@@ -163,11 +163,18 @@ class SlimApp
     public function initSystemMiddlewares(): void
     {
         $displayErrorDetails = $this->container->get('settings')['displayErrorDetails'] ?? false;
+        $logErrors = $this->container->get('settings')['logerrors'] ?? true;
+        $logErrorDetails = $this->container->get('settings')['logerrordetails'] ?? true;
+        $errorHandlers = $this->container->get('settings')['errorhandlers'] ?? [];
         $logger = $this->container->get(LoggerInterface::class);
 
-        $this->app->addBodyParsingMiddleware();
-        $this->app->addRoutingMiddleware();
-        $this->app->addErrorMiddleware($displayErrorDetails, true, true, $logger);
+        $bodyParsingMiddleware = $this->app->addBodyParsingMiddleware();
+        $routingMiddleware = $this->app->addRoutingMiddleware();
+        $errorMiddleware = $this->app->addErrorMiddleware($displayErrorDetails, $logErrors, $logErrorDetails, $logger);
+
+        foreach ($errorHandlers as $errorHandlerExceptionClass => $errorHandlerClass) {
+            $errorMiddleware->setErrorHandler($errorHandlerExceptionClass, $errorHandlerClass);
+        }
     }
 
     /**
