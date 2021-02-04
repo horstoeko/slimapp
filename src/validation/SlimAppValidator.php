@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace horstoeko\slimapp\validation;
 
-use Respect\Validation\Validator;
+use horstoeko\slimapp\exception\SlimAppValidationException;
 use Respect\Validation\Exceptions\NestedValidationException;
 use Symfony\Component\Translation\Translator;
 use SlimSession\Helper as SessionHelper;
@@ -89,7 +89,7 @@ class SlimAppValidator
     }
 
     /**
-     * Undocumented function
+     * Validate data presented as an array
      *
      * @param array $data
      * @param array $rules
@@ -114,6 +114,45 @@ class SlimAppValidator
         }
 
         $this->storeErrorsInSession();
+
+        return $this;
+    }
+
+    /**
+     * Validates data presented as an PSR-Request by the given rules
+     * If validation failes a SlimAppValidationException will thrown
+     *
+     * @param Request $request
+     * @param array $rules
+     * @return SlimAppValidator
+     * @throws SlimAppValidationException
+     */
+    public function validateRequestWithException(Request &$request, array $rules): SlimAppValidator
+    {
+        $this->validateRequest($request, $rules);
+
+        if ($this->failed()) {
+            throw new SlimAppValidationException("Validation failed", $this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Validate data presented as an array
+     * If validation failes a SlimAppValidationException will thrown
+     *
+     * @param array $data
+     * @param array $rules
+     * @return SlimAppValidator
+     */
+    public function validateDataWithException(array $data, array $rules): SlimAppValidator
+    {
+        $this->validateData($data, $rules);
+
+        if ($this->failed()) {
+            throw new SlimAppValidationException("Validation failed", $this);
+        }
 
         return $this;
     }
