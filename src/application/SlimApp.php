@@ -109,6 +109,7 @@ class SlimApp
         $this->app = AppFactory::create();
 
         $this->container->set(App::class, $this->app);
+        $this->container->set(SlimApp::class, $this);
     }
 
     /**
