@@ -6,7 +6,7 @@ namespace horstoeko\slimapp\security;
 
 use horstoeko\slimapp\crypt\SlimAppQuickEncryption;
 use Illuminate\Database\Capsule\Manager as Capsule;
-use horstoeko\slimapp\baseapp\dbtables\User as UserTable;
+use horstoeko\slimapp\baseapp\models\User as UserModel;
 use SlimSession\Helper as SessionHelper;
 
 class SlimAppLoginManager
@@ -52,7 +52,7 @@ class SlimAppLoginManager
             $this->logoutUser();
         }
 
-        $userData = UserTable::where("username", "=", $username)->first();
+        $userData = UserModel::where("username", "=", $username)->first();
 
         if (!$userData) {
             return false;
@@ -164,7 +164,7 @@ class SlimAppLoginManager
         string $lastname,
         string $email
     ): int {
-        $userData = UserTable::where("username", "=", $username)->first();
+        $userData = UserModel::where("username", "=", $username)->first();
 
         if ($userData) {
             return (int)$userData->id;
@@ -178,9 +178,9 @@ class SlimAppLoginManager
             'email' => $email,
         ];
 
-        UserTable::create($dbValues);
+        UserModel::create($dbValues);
 
-        $userData = UserTable::where("username", "=", $username)->first();
+        $userData = UserModel::where("username", "=", $username)->first();
 
         return (int)$userData->id;
     }
@@ -202,7 +202,7 @@ class SlimAppLoginManager
         string $lastname,
         string $email
     ): int {
-        $userData = UserTable::where("username", "=", $username)->first();
+        $userData = UserModel::where("username", "=", $username)->first();
 
         if (!$userData) {
             return -1;
@@ -228,7 +228,7 @@ class SlimAppLoginManager
      */
     public function deleteUser(string $username): int
     {
-        $userData = UserTable::where("username", "=", $username)->first();
+        $userData = UserModel::where("username", "=", $username)->first();
 
         if (!$userData) {
             return -1;
