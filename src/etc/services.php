@@ -2,40 +2,42 @@
 
 declare(strict_types=1);
 
-use Slim\App;
-use Monolog\Logger;
-use Psr\Log\LoggerInterface;
-use Monolog\Handler\StreamHandler;
-use Monolog\Processor\UidProcessor;
-use Psr\Container\ContainerInterface;
-use horstoeko\slimapp\twig\SlimAppTwig;
-use SlimSession\Helper as SessionHelper;
-use horstoeko\slimapp\twig\SlimAppTwigApcCache;
-use horstoeko\slimapp\twig\SlimAppTwigApcuCache;
-use Slim\Middleware\Session as SessionMiddleware;
-use horstoeko\slimapp\security\SlimAppLoginManager;
-use Illuminate\Database\Capsule\Manager as Capsule;
-use horstoeko\slimapp\twig\SlimAppSecurityExtension;
-use horstoeko\slimapp\twig\SlimAppTwigRoutingExtension;
-use Twig\Extra\Html\HtmlExtension as TwigHtmlExtension;
-use Twig\Extra\Intl\IntlExtension as TwigIntlExtension;
-use Twig\Extension\DebugExtension as TwigDebugExtension;
-use horstoeko\slimapp\middleware\SlimAppMiddlewareLocale;
 use horstoeko\slimapp\middleware\SlimAppMiddlewareBasicAuth;
 use horstoeko\slimapp\middleware\SlimAppMiddlewareIpAddress;
-use Twig\Extra\Markdown\DefaultMarkdown as TwigDefaultMarkdown;
-use Twig\Extra\Markdown\MarkdownRuntime as TwigMarkdownRuntime;
-use Symfony\Component\Translation\Translator as SymfonyTranslator;
-use Twig\Extra\Markdown\MarkdownExtension as TwigMarkdownExtension;
+use horstoeko\slimapp\middleware\SlimAppMiddlewareLocale;
 use horstoeko\slimapp\middleware\SlimAppMiddlewareRestrictedRouteAdmin;
 use horstoeko\slimapp\middleware\SlimAppMiddlewareRestrictedRouteLight;
+use horstoeko\slimapp\security\SlimAppLoginManager;
 use horstoeko\slimapp\system\SlimAppDirectories;
+use horstoeko\slimapp\twig\SlimAppSecurityExtension;
+use horstoeko\slimapp\twig\SlimAppTwig;
+use horstoeko\slimapp\twig\SlimAppTwigApcCache;
+use horstoeko\slimapp\twig\SlimAppTwigApcuCache;
+use horstoeko\slimapp\twig\SlimAppTwigRoutingExtension;
+use horstoeko\slimapp\validation\SlimAppValidator;
 use horstoeko\stringmanagement\PathUtils;
-use Twig\RuntimeLoader\RuntimeLoaderInterface as TwigRuntimeLoaderInterface;
+use Illuminate\Container\Container as IlluminateContainer;
+use Illuminate\Database\Capsule\Manager as Capsule;
+use Illuminate\Events\Dispatcher as IlluminateEventDispatcher;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
+use Monolog\Processor\UidProcessor;
+use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
+use Slim\App;
+use Slim\Middleware\Session as SessionMiddleware;
+use SlimSession\Helper as SessionHelper;
+use Symfony\Bridge\Twig\Extension\TranslationExtension as SymfonyTwigBridgeTranslationExtension;
 use Symfony\Component\Translation\Loader\ArrayLoader as SymfonyTranslatorArrayLoader;
 use Symfony\Component\Translation\Loader\PhpFileLoader as SymfonyTranslatorPhpFileLoader;
-use Symfony\Bridge\Twig\Extension\TranslationExtension as SymfonyTwigBridgeTranslationExtension;
-use horstoeko\slimapp\validation\SlimAppValidator;
+use Symfony\Component\Translation\Translator as SymfonyTranslator;
+use Twig\Extension\DebugExtension as TwigDebugExtension;
+use Twig\Extra\Html\HtmlExtension as TwigHtmlExtension;
+use Twig\Extra\Intl\IntlExtension as TwigIntlExtension;
+use Twig\Extra\Markdown\DefaultMarkdown as TwigDefaultMarkdown;
+use Twig\Extra\Markdown\MarkdownExtension as TwigMarkdownExtension;
+use Twig\Extra\Markdown\MarkdownRuntime as TwigMarkdownRuntime;
+use Twig\RuntimeLoader\RuntimeLoaderInterface as TwigRuntimeLoaderInterface;
 
 return [
     SlimAppDirectories::class => function () {
@@ -175,6 +177,14 @@ return [
         return $view;
     },
 
+    IlluminateContainer::class => function () {
+        return new IlluminateContainer();
+    },
+
+    IlluminateEventDispatcher::class => function (ContainerInterface $c) {
+        return new IlluminateEventDispatcher($c->get(IlluminateContainer::class));
+    },
+
     Capsule::class => function (ContainerInterface $c) {
         $settings = $c->get('settings');
         $dbSettings = $settings['db'] ?? [];
@@ -193,6 +203,7 @@ return [
             'port'      => $dbSettings['port']
         ]);
 
+        $capsule->setEventDispatcher($c->get(IlluminateEventDispatcher::class));
         $capsule->setAsGlobal();
         $capsule->bootEloquent();
 

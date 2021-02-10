@@ -57,7 +57,8 @@
         "miladrahimi/phpcrypt": "^5",
         "symfony/console": "^5",
         "respect/validation": "^1",
-        "illuminate/pagination": "^8"
+        "illuminate/pagination": "^8",
+        "illuminate/events": "^8"
     },
     "require-dev": {
         "clean/phpdoc-md": "^0",
