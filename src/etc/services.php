@@ -188,6 +188,7 @@ return [
     Capsule::class => function (ContainerInterface $c) {
         $settings = $c->get('settings');
         $dbSettings = $settings['db'] ?? [];
+        $dbObservers = $dbSettings['observers'] ?? [];
 
         $capsule = new Capsule();
 
@@ -206,6 +207,10 @@ return [
         $capsule->setEventDispatcher($c->get(IlluminateEventDispatcher::class));
         $capsule->setAsGlobal();
         $capsule->bootEloquent();
+
+        foreach ($dbObservers as $modelClass => $dbObserverClass) {
+            $modelClass::observe($c->get($dbObserverClass));
+        }
 
         return $capsule;
     },
