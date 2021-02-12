@@ -58,7 +58,8 @@
         "symfony/console": "^5",
         "respect/validation": "^1",
         "illuminate/pagination": "^8",
-        "illuminate/events": "^8"
+        "illuminate/events": "^8",
+        "symfony/event-dispatcher": "^5"
     },
     "require-dev": {
         "clean/phpdoc-md": "^0",
