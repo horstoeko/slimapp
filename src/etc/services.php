@@ -28,6 +28,7 @@ use Slim\App;
 use Slim\Middleware\Session as SessionMiddleware;
 use SlimSession\Helper as SessionHelper;
 use Symfony\Bridge\Twig\Extension\TranslationExtension as SymfonyTwigBridgeTranslationExtension;
+use Symfony\Component\EventDispatcher\EventDispatcher as SymfonyEventDispatcher;
 use Symfony\Component\Translation\Loader\ArrayLoader as SymfonyTranslatorArrayLoader;
 use Symfony\Component\Translation\Loader\PhpFileLoader as SymfonyTranslatorPhpFileLoader;
 use Symfony\Component\Translation\Translator as SymfonyTranslator;
@@ -293,5 +294,9 @@ return [
         );
 
         return $restrictedRoute;
+    },
+
+    SymfonyEventDispatcher::class => function() {
+        return new SymfonyEventDispatcher();
     },
 ];

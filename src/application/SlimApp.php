@@ -14,6 +14,7 @@ use horstoeko\slimapp\loader\SlimAppServiceLoader;
 use horstoeko\slimapp\loader\SlimAppSettingsLoader;
 use horstoeko\slimapp\loader\SlimAppMiddlewareLoader;
 use horstoeko\slimapp\loader\SlimAppConsoleCommandsLoader;
+use horstoeko\slimapp\loader\SlimAppEventSubscriberLoader;
 
 class SlimApp
 {
@@ -56,6 +57,7 @@ class SlimApp
         $slimApplication->initConsoleCommands();
         $slimApplication->initServices();
         $slimApplication->initSlimmApp();
+        $slimApplication->initEventSubscribers();
         $slimApplication->initMiddlewares();
         $slimApplication->initRoutes();
         $slimApplication->initSystemMiddlewares();
@@ -131,6 +133,17 @@ class SlimApp
     public function initServices(): void
     {
         $loader = new SlimAppServiceLoader($this->containerBuilder);
+        $loader->load();
+    }
+
+    /**
+     * Initialize all event subscribers
+     *
+     * @return void
+     */
+    public function initEventSubscribers(): void
+    {
+        $loader = new SlimAppEventSubscriberLoader($this->container);
         $loader->load();
     }
 
