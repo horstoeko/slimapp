@@ -4,17 +4,19 @@ declare(strict_types=1);
 
 namespace horstoeko\slimapp\application;
 
-use Slim\App;
 use DI\ContainerBuilder;
-use Psr\Log\LoggerInterface;
-use Slim\Factory\AppFactory;
-use Psr\Container\ContainerInterface;
+use horstoeko\slimapp\event\SlimAppAfterInitApplicationEvent;
+use horstoeko\slimapp\loader\SlimAppConsoleCommandsLoader;
+use horstoeko\slimapp\loader\SlimAppEventSubscriberLoader;
+use horstoeko\slimapp\loader\SlimAppMiddlewareLoader;
 use horstoeko\slimapp\loader\SlimAppRouteLoader;
 use horstoeko\slimapp\loader\SlimAppServiceLoader;
 use horstoeko\slimapp\loader\SlimAppSettingsLoader;
-use horstoeko\slimapp\loader\SlimAppMiddlewareLoader;
-use horstoeko\slimapp\loader\SlimAppConsoleCommandsLoader;
-use horstoeko\slimapp\loader\SlimAppEventSubscriberLoader;
+use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
+use Slim\App;
+use Slim\Factory\AppFactory;
+use Symfony\Component\EventDispatcher\EventDispatcher as SymfonyEventDispatcher;
 
 class SlimApp
 {
@@ -61,6 +63,7 @@ class SlimApp
         $slimApplication->initMiddlewares();
         $slimApplication->initRoutes();
         $slimApplication->initSystemMiddlewares();
+        $slimApplication->sendApplicationInitializationFinishedEvent();
 
         return $slimApplication;
     }
@@ -200,6 +203,20 @@ class SlimApp
     {
         $loader = new SlimAppConsoleCommandsLoader($this->containerBuilder);
         $loader->load();
+    }
+
+    /**
+     * Send global event that the application initialization is finished
+     *
+     * @return void
+     */
+    public function sendApplicationInitializationFinishedEvent(): void
+    {
+        /**
+         * @var SymfonyEventDispatcher
+         */
+        $eventDispatcher = $this->container->get(SymfonyEventDispatcher::class);
+        $eventDispatcher->dispatch(new SlimAppAfterInitApplicationEvent($this->app, $this, $this->container));
     }
 
     /**
