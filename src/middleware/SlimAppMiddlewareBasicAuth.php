@@ -102,8 +102,10 @@ class SlimAppMiddlewareBasicAuth extends SlimAppMiddlewareBase
                 $allowedForward = false;
 
                 if (in_array("headers", $this->relaxed)) {
-                    if ($request->getHeaderLine("X-Forwarded-Proto") === "https" &&
-                        $request->getHeaderLine('X-Forwarded-Port') === "443") {
+                    if (
+                        $request->getHeaderLine("X-Forwarded-Proto") === "https" &&
+                        $request->getHeaderLine('X-Forwarded-Port') === "443"
+                    ) {
                         $allowedForward = true;
                     }
                 }
@@ -129,14 +131,14 @@ class SlimAppMiddlewareBasicAuth extends SlimAppMiddlewareBase
             }
 
             if ($this->loginManager->loginUser($username, $password) === false) {
-                return $this->
-                    responseFactory->
-                    createResponse()->
-                    withStatus(401)->
-                    withHeader(
-                        "WWW-Authenticate",
-                        sprintf('Basic realm="%s"', $this->realm)
-                    );
+                if ($this->isJsonRequest($request)) {
+                    return $this->responseFactory->createResponse()->withStatus(403);
+                } else {
+                    return $this->responseFactory->createResponse()->withStatus(401)->withHeader(
+                            "WWW-Authenticate",
+                            sprintf('Basic realm="%s"', $this->realm)
+                        );
+                }
             }
         }
 
@@ -161,8 +163,10 @@ class SlimAppMiddlewareBasicAuth extends SlimAppMiddlewareBase
             }
         } else {
             foreach ($this->relaxed as $relaxeditem) {
-                if (preg_match('/^([0-9]{1,3}\.){3}[0-9]{1,3}(\/([0-9]|[1-2][0-9]|3[0-2]))?$/im', $relaxeditem) &&
-                ($this->cidrMatch($host, $relaxeditem))) {
+                if (
+                    preg_match('/^([0-9]{1,3}\.){3}[0-9]{1,3}(\/([0-9]|[1-2][0-9]|3[0-2]))?$/im', $relaxeditem) &&
+                    ($this->cidrMatch($host, $relaxeditem))
+                ) {
                     return true;
                 } elseif ($host == $relaxeditem) {
                     return true;
@@ -189,5 +193,16 @@ class SlimAppMiddlewareBasicAuth extends SlimAppMiddlewareBase
         }
 
         return false;
+    }
+
+    /**
+     * Returns true if request is a json request
+     *
+     * @return boolean
+     */
+    protected function isJsonRequest(Request $request): bool
+    {
+        $cType = $request->getHeaderLine('Content-Type');
+        return stripos('application/json', $cType) !== false;
     }
 }
