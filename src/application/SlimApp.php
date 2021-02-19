@@ -12,6 +12,7 @@ use horstoeko\slimapp\loader\SlimAppMiddlewareLoader;
 use horstoeko\slimapp\loader\SlimAppRouteLoader;
 use horstoeko\slimapp\loader\SlimAppServiceLoader;
 use horstoeko\slimapp\loader\SlimAppSettingsLoader;
+use horstoeko\slimapp\system\SlimAppDirectories;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Slim\App;
@@ -112,6 +113,7 @@ class SlimApp
         AppFactory::setContainer($this->container);
 
         $this->app = AppFactory::create();
+        $this->app->setBasePath(rtrim($this->container->get(SlimAppDirectories::class)->getsubdirname(), '/'));
 
         $this->container->set(App::class, $this->app);
         $this->container->set(SlimApp::class, $this);
