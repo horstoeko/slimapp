@@ -203,8 +203,10 @@ class SlimApp
      */
     public function initConsoleCommands(): void
     {
-        $loader = new SlimAppConsoleCommandsLoader($this->containerBuilder);
-        $loader->load();
+        if (php_sapi_name() === "cli") {
+            $loader = new SlimAppConsoleCommandsLoader($this->containerBuilder);
+            $loader->load();
+        }
     }
 
     /**
