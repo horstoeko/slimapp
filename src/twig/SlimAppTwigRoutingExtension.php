@@ -21,7 +21,7 @@ class SlimAppTwigRoutingExtension extends SlimAppTwigExtension
     protected $routeParser;
 
     /**
-     * @var \Slim\Interfaces\RouteParserInterface
+     * @var \Slim\Interfaces\RouteCollectorInterface
      */
     protected $routeCollector;
 
@@ -127,9 +127,9 @@ class SlimAppTwigRoutingExtension extends SlimAppTwigExtension
     public function urlForRaw(string $name, bool $noException = false): string
     {
         try {
-            $basePath = $this->getRouteCollector()->getBasePath();
+            $basePath = $this->routeCollector->getBasePath();
 
-            $route = $this->getRouteCollector()->getNamedRoute($name);
+            $route = $this->routeCollector->getNamedRoute($name);
             $pattern = $route->getPattern();
 
             if ($basePath) {
@@ -171,7 +171,7 @@ class SlimAppTwigRoutingExtension extends SlimAppTwigExtension
         try {
             $serverRequestCreator = ServerRequestCreatorFactory::create();
             $request = $serverRequestCreator->createServerRequestFromGlobals();
-            $basePath = $this->getRouteCollector()->getBasePath();
+            $basePath = $this->routeCollector->getBasePath();
 
             $currentUrl = $basePath . $request->getUri()->getPath();
             $requestedUrl = $this->routeParser->urlFor($routeName);
@@ -193,7 +193,7 @@ class SlimAppTwigRoutingExtension extends SlimAppTwigExtension
         try {
             $serverRequestCreator = ServerRequestCreatorFactory::create();
             $request = $serverRequestCreator->createServerRequestFromGlobals();
-            $basePath = $this->getRouteCollector()->getBasePath();
+            $basePath = $this->routeCollector->getBasePath();
 
             $currentUrl = $basePath . $request->getUri()->getPath();
             $requestedUrl = $this->routeParser->urlFor($routeName);
@@ -212,7 +212,7 @@ class SlimAppTwigRoutingExtension extends SlimAppTwigExtension
      */
     public function urlExists(string $routeName)
     {
-        foreach ($this->getRouteCollector()->getRoutes() as $route) {
+        foreach ($this->routeCollector->getRoutes() as $route) {
             if ($routeName === $route->getName()) {
                 return true;
             }
@@ -231,7 +231,7 @@ class SlimAppTwigRoutingExtension extends SlimAppTwigExtension
         try {
             $serverRequestCreator = ServerRequestCreatorFactory::create();
             $request = $serverRequestCreator->createServerRequestFromGlobals();
-            $basePath = $this->getRouteCollector()->getBasePath();
+            $basePath = $this->routeCollector->getBasePath();
 
             $currentUrl = $basePath . $request->getUri()->getPath();
 
