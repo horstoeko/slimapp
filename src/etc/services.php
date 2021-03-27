@@ -218,7 +218,7 @@ return [
             $capsule->getConnection()->setEventDispatcher($c->get(IlluminateEventDispatcher::class));
             $capsule->getConnection()->listen(function ($query) use ($logger) {
                 $logger->debug(
-                    $query->sql . ' [' . implode(', ', $query->bindings) . ']' . PHP_EOL . PHP_EOL
+                    "Time: " . number_format($query->time ?? 0, 5, ",", ".") . ", SQL: " . $query->sql . ' [' . implode(', ', $query->bindings) . ']' . PHP_EOL . PHP_EOL
                 );
             });
         }
