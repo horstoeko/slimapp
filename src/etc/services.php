@@ -190,6 +190,7 @@ return [
         $settings = $c->get('settings');
         $dbSettings = $settings['db'] ?? [];
         $dbObservers = $dbSettings['observers'] ?? [];
+        $dbLogEnabled = $dbSettings['logenabled'] ?? false;
 
         $capsule = new Capsule();
 
@@ -207,6 +208,21 @@ return [
 
         $capsule->setEventDispatcher($c->get(IlluminateEventDispatcher::class));
         $capsule->setAsGlobal();
+
+        if ($dbLogEnabled === true) {
+            /**
+             * @var LoggerInterface
+             */
+            $logger = $c->get(LoggerInterface::class);
+
+            $capsule->getConnection()->setEventDispatcher($c->get(IlluminateEventDispatcher::class));
+            $capsule->getConnection()->listen(function ($query) use ($logger) {
+                $logger->debug(
+                    $query->sql . ' [' . implode(', ', $query->bindings) . ']' . PHP_EOL . PHP_EOL
+                );
+            });
+        }
+
         $capsule->bootEloquent();
 
         foreach ($dbObservers as $modelClass => $dbObserverClass) {
