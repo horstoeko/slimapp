@@ -186,7 +186,7 @@ return [
         return new IlluminateEventDispatcher($c->get(IlluminateContainer::class));
     },
 
-    Capsule::class => function (ContainerInterface $c) {
+    Capsule::class => function (ContainerInterface $c, LoggerInterface $logger) {
         $settings = $c->get('settings');
         $dbSettings = $settings['db'] ?? [];
         $dbObservers = $dbSettings['observers'] ?? [];
@@ -210,11 +210,6 @@ return [
         $capsule->setAsGlobal();
 
         if ($dbLogEnabled === true) {
-            /**
-             * @var LoggerInterface
-             */
-            $logger = $c->get(LoggerInterface::class);
-
             $capsule->getConnection()->setEventDispatcher($c->get(IlluminateEventDispatcher::class));
             $capsule->getConnection()->listen(function ($query) use ($logger) {
                 $logger->debug(
