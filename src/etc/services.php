@@ -191,6 +191,7 @@ return [
         $dbSettings = $settings['db'] ?? [];
         $dbObservers = $dbSettings['observers'] ?? [];
         $dbLogEnabled = $dbSettings['logenabled'] ?? false;
+        $dbExtraConnections = $dbSettings['extraconnections'] ?? [];
 
         $capsule = new Capsule();
 
@@ -206,6 +207,10 @@ return [
             'port'      => $dbSettings['port']
         ]);
 
+        foreach ($dbExtraConnections as $dbExtraConnectionName => $dbExtraConnectionConfig) {
+            $capsule->addConnection($dbExtraConnectionConfig, $dbExtraConnectionName);
+        }
+
         $capsule->setEventDispatcher($c->get(IlluminateEventDispatcher::class));
         $capsule->setAsGlobal();
 
@@ -213,9 +218,18 @@ return [
             $capsule->getConnection()->setEventDispatcher($c->get(IlluminateEventDispatcher::class));
             $capsule->getConnection()->listen(function ($query) use ($logger) {
                 $logger->debug(
-                    "Time: " . number_format($query->time ?? 0, 5, ",", ".") . ", SQL: " . $query->sql . ' [' . implode(', ', $query->bindings) . ']' . PHP_EOL . PHP_EOL
+                    "[PRIMCONN] Time: " . number_format($query->time ?? 0, 5, ",", ".") . ", SQL: " . $query->sql . ' [' . implode(', ', $query->bindings) . ']' . PHP_EOL . PHP_EOL
                 );
             });
+
+            foreach ($dbExtraConnections as $dbExtraConnectionName => $dbExtraConnectionConfig) {
+                $capsule->getConnection($dbExtraConnectionName)->setEventDispatcher($c->get(IlluminateEventDispatcher::class));
+                $capsule->getConnection($dbExtraConnectionName)->listen(function ($query) use ($logger, $dbExtraConnectionName) {
+                    $logger->debug(
+                        "[" . $dbExtraConnectionName . "] Time: " . number_format($query->time ?? 0, 5, ",", ".") . ", SQL: " . $query->sql . ' [' . implode(', ', $query->bindings) . ']' . PHP_EOL . PHP_EOL
+                    );
+                });
+            }
         }
 
         $capsule->bootEloquent();
@@ -307,7 +321,7 @@ return [
         return $restrictedRoute;
     },
 
-    SymfonyEventDispatcher::class => function() {
+    SymfonyEventDispatcher::class => function () {
         return new SymfonyEventDispatcher();
     },
 ];
