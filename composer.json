@@ -59,7 +59,8 @@
         "respect/validation": "^1",
         "illuminate/pagination": "^8",
         "illuminate/events": "^8",
-        "symfony/event-dispatcher": "^5"
+        "symfony/event-dispatcher": "^5",
+        "phpmailer/phpmailer": "*"
     },
     "require-dev": {
         "clean/phpdoc-md": "^0",

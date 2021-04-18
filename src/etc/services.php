@@ -22,6 +22,7 @@ use Illuminate\Events\Dispatcher as IlluminateEventDispatcher;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Monolog\Processor\UidProcessor;
+use PHPMailer\PHPMailer\PHPMailer;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Slim\App;
@@ -323,5 +324,23 @@ return [
 
     SymfonyEventDispatcher::class => function () {
         return new SymfonyEventDispatcher();
+    },
+
+    PHPMailer::class => function (ContainerInterface $c) {
+        $settings = $c->get('settings');
+        $mailerSettings = $settings['mail'] ?? [];
+
+        $phpMail = new PHPMailer(false);
+
+        $phpMail->isSMTP();
+        $phpMail->Host = $mailerSettings["smtphost"];
+        $phpMail->Port = $mailerSettings["smtpport"];
+        $phpMail->SMTPAuth = $mailerSettings["smtpauth"];
+        $phpMail->Username = $mailerSettings["smtpuser"];
+        $phpMail->Password = $mailerSettings["smtppasswd"];
+        $phpMail->SMTPSecure = $mailerSettings["smtpsecure"];
+        $phpMail->SMTPOptions = $mailerSettings["smtpoptions"];
+
+        return $phpMail;
     },
 ];

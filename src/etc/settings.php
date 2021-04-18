@@ -31,4 +31,19 @@ return [
         'languagelocalemaps' => ['de_DE' => 'de_DE.utf8'],
         'unknownlanguagecodemaps' => ['en_EN' => 'en_GB'],
     ],
+    'mail' => [
+        'smtphost' => '127.0.0.1',
+        'smtpport' => 25,
+        'smtpauth' => true,
+        'smtpuser' => '',
+        'smtppasswd' => '',
+        'smtpsecure' => \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS,
+        'smtpoptions' => [
+            'ssl' => [
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+                'allow_self_signed' => true,
+            ],
+        ]
+    ]
 ];
