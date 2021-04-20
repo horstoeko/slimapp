@@ -9,7 +9,7 @@ use horstoeko\slimapp\middleware\SlimAppMiddlewareRestrictedRouteAdmin;
 use horstoeko\slimapp\middleware\SlimAppMiddlewareRestrictedRouteLight;
 use horstoeko\slimapp\security\SlimAppLoginManager;
 use horstoeko\slimapp\system\SlimAppDirectories;
-use horstoeko\slimapp\twig\SlimAppSecurityExtension;
+use horstoeko\slimapp\twig\SlimAppTwigSecurityExtension;
 use horstoeko\slimapp\twig\SlimAppTwig;
 use horstoeko\slimapp\twig\SlimAppTwigApcCache;
 use horstoeko\slimapp\twig\SlimAppTwigApcuCache;
@@ -155,7 +155,7 @@ return [
             new SymfonyTwigBridgeTranslationExtension($translator)
         );
         $view->addExtension(
-            new SlimAppSecurityExtension($loginManager)
+            new SlimAppTwigSecurityExtension($loginManager)
         );
         $view->addExtension(
             new SlimAppTwigRoutingExtension(

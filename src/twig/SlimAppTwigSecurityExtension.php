@@ -11,7 +11,7 @@ use horstoeko\slimapp\security\SlimAppLoginManager;
 /**
  * SlimApp Security Extensions for twig
  */
-class SlimAppSecurityExtension extends SlimAppTwigExtension
+class SlimAppTwigSecurityExtension extends SlimAppTwigExtension
 {
     /**
      * LoginManager reference
