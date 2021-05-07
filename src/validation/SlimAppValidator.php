@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace horstoeko\slimapp\validation;
 
+use Respect\Validation\Validator as v;
 use horstoeko\slimapp\exception\SlimAppValidationException;
 use Respect\Validation\Exceptions\NestedValidationException;
 use Symfony\Component\Translation\Translator;
@@ -98,6 +99,17 @@ class SlimAppValidator
     public function validateData(array $data, array $rules): SlimAppValidator
     {
         $this->clearErrors();
+
+        foreach ($rules as $field => $rule) {
+            try {
+                $rule = v::key($field)->setName(ucfirst($field))->assert($data);
+            } catch (NestedValidationException $exception) {
+                $exception->setParam('translator', function ($message) {
+                    return $this->translate($message);
+                });
+                $this->errors[$field] = $exception->getMessages();
+            }
+        }
 
         foreach ($rules as $field => $rule) {
             try {
