@@ -9,11 +9,11 @@ use horstoeko\slimapp\middleware\SlimAppMiddlewareRestrictedRouteAdmin;
 use horstoeko\slimapp\middleware\SlimAppMiddlewareRestrictedRouteLight;
 use horstoeko\slimapp\security\SlimAppLoginManager;
 use horstoeko\slimapp\system\SlimAppDirectories;
-use horstoeko\slimapp\twig\SlimAppTwigSecurityExtension;
 use horstoeko\slimapp\twig\SlimAppTwig;
 use horstoeko\slimapp\twig\SlimAppTwigApcCache;
 use horstoeko\slimapp\twig\SlimAppTwigApcuCache;
 use horstoeko\slimapp\twig\SlimAppTwigRoutingExtension;
+use horstoeko\slimapp\twig\SlimAppTwigSecurityExtension;
 use horstoeko\slimapp\validation\SlimAppValidator;
 use horstoeko\stringmanagement\PathUtils;
 use Illuminate\Container\Container as IlluminateContainer;
@@ -126,6 +126,12 @@ return [
 
         if (is_dir($directories->getvendortemplatesdirectory())) {
             $dirCollection["slimapp"] = $directories->getcustomtemplatesdirectory();
+        }
+
+        foreach ($twigSettings["additionaldirectories"] ?? [] as $additionaldirectoryns => $additionaldirectory) {
+            if (is_dir($additionaldirectory)) {
+                $dirCollection[$additionaldirectoryns] = $additionaldirectory;
+            }
         }
 
         $view = new SlimAppTwig(

@@ -21,6 +21,7 @@ return [
         'optimizations' => -1,
         'templatesettings' => [],
         'cachemode' => 1,
+        'additionaldirectories' => [],
     ],
     'locale' => [
         'availablelanguagecodes' => ['de_DE', 'en_GB'],
