@@ -164,7 +164,7 @@ class SlimAppMiddlewareLocale extends SlimAppMiddlewareBase
         // Finished
 
         $response = $handler->handle($request)
-            ->withHeader("Content-Language", $this->languageDefinition->ContentLanguage);
+            ->withHeader("Content-Language", $this->languageDefinition->ContentLanguage2);
 
         return $response;
     }
