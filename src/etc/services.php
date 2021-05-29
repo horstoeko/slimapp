@@ -24,8 +24,10 @@ use Monolog\Logger;
 use Monolog\Processor\UidProcessor;
 use PHPMailer\PHPMailer\PHPMailer;
 use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Log\LoggerInterface;
 use Slim\App;
+use Slim\Interfaces\CallableResolverInterface;
 use Slim\Middleware\Session as SessionMiddleware;
 use SlimSession\Helper as SessionHelper;
 use Symfony\Bridge\Twig\Extension\TranslationExtension as SymfonyTwigBridgeTranslationExtension;
@@ -42,6 +44,14 @@ use Twig\Extra\Markdown\MarkdownRuntime as TwigMarkdownRuntime;
 use Twig\RuntimeLoader\RuntimeLoaderInterface as TwigRuntimeLoaderInterface;
 
 return [
+    CallableResolverInterface::class => function (ContainerInterface $container) {
+        return $container->get(App::class)->getCallableResolver();
+    },
+
+    ResponseFactoryInterface::class => function (ContainerInterface $container) {
+        return $container->get(App::class)->getResponseFactory();
+    },
+
     SlimAppDirectories::class => function () {
         return new SlimAppDirectories();
     },
