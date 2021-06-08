@@ -7,6 +7,7 @@ use horstoeko\slimapp\middleware\SlimAppMiddlewareIpAddress;
 use horstoeko\slimapp\middleware\SlimAppMiddlewareLocale;
 use horstoeko\slimapp\middleware\SlimAppMiddlewareRestrictedRouteAdmin;
 use horstoeko\slimapp\middleware\SlimAppMiddlewareRestrictedRouteLight;
+use horstoeko\slimapp\middleware\SlimAppMiddlewareValidation;
 use horstoeko\slimapp\security\SlimAppLoginManager;
 use horstoeko\slimapp\system\SlimAppDirectories;
 use horstoeko\slimapp\twig\SlimAppTwig;
@@ -336,6 +337,13 @@ return [
         );
 
         return $restrictedRoute;
+    },
+
+    SlimAppMiddlewareValidation::class => function (ContainerInterface $c, App $app) {
+        $settings = $c->get('settings');
+        $middlewareSettings = $settings['validationmiddleware'] ?? [];
+
+        return new SlimAppMiddlewareValidation($app->getResponseFactory(), $middlewareSettings);
     },
 
     SymfonyEventDispatcher::class => function () {
