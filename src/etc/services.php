@@ -204,14 +204,14 @@ return [
         return new IlluminateEventDispatcher($c->get(IlluminateContainer::class));
     },
 
-    Capsule::class => function (ContainerInterface $c, LoggerInterface $logger) {
+    Capsule::class => function (ContainerInterface $c, LoggerInterface $logger, IlluminateContainer $illuminateContainer, IlluminateEventDispatcher $illuminateEventDispatcher) {
         $settings = $c->get('settings');
         $dbSettings = $settings['db'] ?? [];
         $dbObservers = $dbSettings['observers'] ?? [];
         $dbLogEnabled = $dbSettings['logenabled'] ?? false;
         $dbExtraConnections = $dbSettings['extraconnections'] ?? [];
 
-        $capsule = new Capsule();
+        $capsule = new Capsule($illuminateContainer);
 
         $capsule->addConnection([
             'driver'    => $dbSettings['driver'],
@@ -229,11 +229,11 @@ return [
             $capsule->addConnection($dbExtraConnectionConfig, $dbExtraConnectionName);
         }
 
-        $capsule->setEventDispatcher($c->get(IlluminateEventDispatcher::class));
+        $capsule->setEventDispatcher($illuminateEventDispatcher);
         $capsule->setAsGlobal();
 
         if ($dbLogEnabled === true) {
-            $capsule->getConnection()->setEventDispatcher($c->get(IlluminateEventDispatcher::class));
+            $capsule->getConnection()->setEventDispatcher($illuminateEventDispatcher);
             $capsule->getConnection()->listen(function ($query) use ($logger) {
                 $logger->debug(
                     "[PRIMCONN] Time: " . number_format($query->time ?? 0, 5, ",", ".") . ", SQL: " . $query->sql . ' [' . implode(', ', $query->bindings) . ']' . PHP_EOL . PHP_EOL
@@ -241,7 +241,7 @@ return [
             });
 
             foreach ($dbExtraConnections as $dbExtraConnectionName => $dbExtraConnectionConfig) {
-                $capsule->getConnection($dbExtraConnectionName)->setEventDispatcher($c->get(IlluminateEventDispatcher::class));
+                $capsule->getConnection($dbExtraConnectionName)->setEventDispatcher($illuminateEventDispatcher);
                 $capsule->getConnection($dbExtraConnectionName)->listen(function ($query) use ($logger, $dbExtraConnectionName) {
                     $logger->debug(
                         "[" . $dbExtraConnectionName . "] Time: " . number_format($query->time ?? 0, 5, ",", ".") . ", SQL: " . $query->sql . ' [' . implode(', ', $query->bindings) . ']' . PHP_EOL . PHP_EOL
