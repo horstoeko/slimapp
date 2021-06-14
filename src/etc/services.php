@@ -211,6 +211,8 @@ return [
         $dbLogEnabled = $dbSettings['logenabled'] ?? false;
         $dbExtraConnections = $dbSettings['extraconnections'] ?? [];
 
+        $illuminateContainer->instance(ContainerInterface::class, $c);
+
         $capsule = new Capsule($illuminateContainer);
 
         $capsule->addConnection([
