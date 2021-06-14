@@ -253,7 +253,7 @@ return [
         $capsule->bootEloquent();
 
         foreach ($dbObservers as $modelClass => $dbObserverClass) {
-            $modelClass::observe($c->get($dbObserverClass));
+            $modelClass::observe($dbObserverClass);
         }
 
         return $capsule;
