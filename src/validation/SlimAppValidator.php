@@ -102,7 +102,12 @@ class SlimAppValidator
 
         foreach ($rules as $field => $rule) {
             try {
-                $rule = v::key($field)->setName(ucfirst($field))->assert($data);
+                $isOptional = $this->isOptionalField($field);
+                if ($isOptional == true) {
+                    $rule = v::key($field, null, false)->setName(ucfirst($field))->assert($data);
+                } else {
+                    $rule = v::key($field)->setName(ucfirst($field))->assert($data);
+                }
             } catch (NestedValidationException $exception) {
                 $exception->setParam('translator', function ($message) {
                     return $this->translate($message);
@@ -118,8 +123,14 @@ class SlimAppValidator
 
         foreach ($rules as $field => $rule) {
             try {
+                $isOptional = $this->isOptionalField($field);
                 if ($rule->getName() == "") {
                     $rule->setName(ucfirst($field));
+                }
+                if ($isOptional == true) {
+                    if (!v::key($field)->validate($data)) {
+                        continue;
+                    }
                 }
                 $rule->assert($data[$field]);
             } catch (NestedValidationException $exception) {
@@ -230,5 +241,22 @@ class SlimAppValidator
         }
 
         return reset($this->errors)[0];
+    }
+
+    /**
+     * Check the validation field name for it
+     * optionallity, returns the cleaned field name
+     *
+     * @param string $field
+     * @return boolean
+     */
+    private function isOptionalField(string &$field): bool
+    {
+        if (strtoupper(substr($field, 0, 2)) == "O:") {
+            $field = substr($field, 2);
+            return true;
+        }
+
+        return false;
     }
 }
