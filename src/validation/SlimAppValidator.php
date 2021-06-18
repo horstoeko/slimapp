@@ -111,6 +111,11 @@ class SlimAppValidator
             }
         }
 
+        if ($this->failed()) {
+            $this->storeErrorsInSession();
+            return $this;
+        }
+
         foreach ($rules as $field => $rule) {
             try {
                 if ($rule->getName() == "") {
