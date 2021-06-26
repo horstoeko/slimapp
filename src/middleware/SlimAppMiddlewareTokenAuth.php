@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace horstoeko\slimapp\middleware;
 
+use \horstoeko\slimapp\security\SlimAppLoginManager;
+use \Psr\Http\Message\ResponseFactoryInterface;
 use \PSr\Http\Message\ResponseInterface as Response;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Server\RequestHandlerInterface as RequestHandler;
-use \horstoeko\slimapp\security\SlimAppLoginManager;
-use \Psr\Http\Message\ResponseFactoryInterface;
 
-class SlimAppMiddlewareBasicAuth extends SlimAppMiddlewareBase
+class SlimAppMiddlewareTokenAuth extends SlimAppMiddlewareBase
 {
     /**
      * Loginmanager reference
@@ -41,11 +41,13 @@ class SlimAppMiddlewareBasicAuth extends SlimAppMiddlewareBase
     protected $relaxed = ["localhost", "127.0.0.1", "192.168.1.0/24"];
 
     /**
-     * The realm
+     * If this property is set to true and a token header was not
+     * transmitted no error will occur. You must ensure to authenticate
+     * a user in another way (e.g. basic auth)
      *
-     * @var string
+     * @var boolean
      */
-    protected $realm = "Protected";
+    protected $optional = true;
 
     /**
      * Constructor
@@ -112,42 +114,45 @@ class SlimAppMiddlewareBasicAuth extends SlimAppMiddlewareBase
 
                 if (!($allowedHost || $allowedForward)) {
                     throw new \RuntimeException(
-                        sprintf(
-                            "Insecure use of middleware over %s denied by configuration.",
-                            strtoupper($scheme)
-                        )
+                        sprintf("Insecure use of middleware over %s denied by configuration.", strtoupper($scheme))
                     );
                 }
             }
 
-            $username = "";
-            $password = "";
-            $authenticatedByBasicAuth = false;
+            $token = "";
+            $authenticatedByToken = false;
 
-            if (preg_match("/Basic\s+(.*)$/i", $request->getHeaderLine("Authorization"), $matches)) {
-                $explodedCredential = explode(":", base64_decode($matches[1]), 2);
-                if (count($explodedCredential) == 2) {
-                    list($username, $password) = $explodedCredential;
-                }
-            }
-
-            if ($this->loginManager->loginUser($username, $password) === false) {
-                if ($this->isJsonRequest($request)) {
-                    return $this->responseFactory->createResponse()->withStatus(401);
-                } else {
-                    return $this->responseFactory->createResponse()->withStatus(401)->withHeader(
-                        "WWW-Authenticate",
-                        sprintf('Basic realm="%s"', $this->realm)
-                    );
-                }
+            if (preg_match("/Bearer\s+(.*)$/i", $request->getHeaderLine("Authorization"), $matches)) {
+                $token = $matches[1];
             } else {
-                $authenticatedByBasicAuth = true;
+                $queryParams = $request->getQueryParams();
+                if (isset($queryParams["private_token"]) && $queryParams["private_token"] != "") {
+                    $token = $request->getQueryParams()["private_token"];
+                }
+                else if (isset($queryParams["token"]) && $queryParams["token"] != "") {
+                    $token = $request->getQueryParams()["token"];
+                }
+            }
+
+            if (!$token && $this->optional === true) {
+                // Do nothing if no token was presented and the
+                // optional mode is active
+            } else {
+                if ($this->loginManager->loginUserByToken($token) === false) {
+                    if ($this->isJsonRequest($request)) {
+                        return $this->responseFactory->createResponse()->withStatus(401);
+                    } else {
+                        return $this->responseFactory->createResponse()->withStatus(401);
+                    }
+                } else {
+                    $authenticatedByToken = true;
+                }
             }
         }
 
         $response = $handler->handle($request);
 
-        if ($authenticatedByBasicAuth === true) {
+        if ($authenticatedByToken === true) {
             $this->loginManager->logoutUser();
         }
 

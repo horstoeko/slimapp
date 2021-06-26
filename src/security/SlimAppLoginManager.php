@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace horstoeko\slimapp\security;
 
-use Illuminate\Database\Capsule\Manager as Capsule;
 use horstoeko\slimapp\baseapp\models\User as UserModel;
 use horstoeko\stringmanagement\StringUtils;
+use Illuminate\Database\Capsule\Manager as Capsule;
 use SlimSession\Helper as SessionHelper;
 
 class SlimAppLoginManager
@@ -204,7 +204,8 @@ class SlimAppLoginManager
         string $password,
         string $firstname,
         string $lastname,
-        string $email
+        string $email,
+        string $token
     ): int {
         $userData = UserModel::where("username", "=", $username)->first();
 
@@ -218,6 +219,7 @@ class SlimAppLoginManager
         $userData->firstname = $firstname;
         $userData->lastname = $lastname;
         $userData->email = $email;
+        $userData->token = $token;
         $userData->save();
 
         return (int)$userData->id;
@@ -238,7 +240,8 @@ class SlimAppLoginManager
         string $password,
         string $firstname,
         string $lastname,
-        string $email
+        string $email,
+        string $token
     ): int {
         $userData = UserModel::where("username", "=", $username)->first();
 
@@ -257,6 +260,9 @@ class SlimAppLoginManager
         }
         if (!StringUtils::stringIsNullOrEmpty($email)) {
             $userData->email = $email;
+        }
+        if (!StringUtils::stringIsNullOrEmpty($token)) {
+            $userData->token = $token;
         }
 
         $userData->update();
@@ -279,6 +285,31 @@ class SlimAppLoginManager
         }
 
         $userData->delete();
+
+        return (int)$userData->id;
+    }
+
+    /**
+     * Create and assign a token for a specific user
+     *
+     * @param string $username
+     * @param boolean $overwrite
+     * @return integer
+     */
+    public function createUserToken(string $username, bool $overwrite = false): int
+    {
+        $userData = UserModel::where("username", "=", $username)->first();
+
+        if (!$userData) {
+            return -1;
+        }
+
+        if ($overwrite == false && (string)$userData->token != "") {
+            return -2;
+        }
+
+        $userData->token = bin2hex(random_bytes(16));
+        $userData->update();
 
         return (int)$userData->id;
     }

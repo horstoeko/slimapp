@@ -3,17 +3,18 @@
 namespace horstoeko\slimapp\console;
 
 use horstoeko\slimapp\application\SlimApp;
+use horstoeko\slimapp\console\command\SlimAppConsoleDirectoriesListCommand;
+use horstoeko\slimapp\console\command\SlimAppConsoleRoutesListCommand;
+use horstoeko\slimapp\console\command\SlimAppConsoleUserCreateCommand;
+use horstoeko\slimapp\console\command\SlimAppConsoleUserDeleteCommand;
+use horstoeko\slimapp\console\command\SlimAppConsoleUserModifyCommand;
+use horstoeko\slimapp\console\command\SlimAppConsoleUserTokenCommand;
+use horstoeko\slimapp\console\helper\SlimAppConsoleApplicationHelper;
+use horstoeko\slimapp\console\helper\SlimAppConsoleContainerHelper;
+use horstoeko\slimapp\console\helper\SlimAppConsoleCoreApplicationHelper;
+use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Helper\HelperSet;
-use horstoeko\slimapp\console\helper\SlimAppConsoleContainerHelper;
-use horstoeko\slimapp\console\helper\SlimAppConsoleApplicationHelper;
-use horstoeko\slimapp\console\command\SlimAppConsoleRoutesListCommand;
-use horstoeko\slimapp\console\helper\SlimAppConsoleCoreApplicationHelper;
-use horstoeko\slimapp\console\command\SlimAppConsoleDirectoriesListCommand;
-use horstoeko\slimapp\console\command\SlimAppConsoleUserCreateCommand;
-use horstoeko\slimapp\console\command\SlimAppConsoleUserModifyCommand;
-use horstoeko\slimapp\console\command\SlimAppConsoleUserDeleteCommand;
-use Psr\Container\ContainerInterface;
 
 final class SlimAppConsoleRunner
 {
@@ -83,6 +84,7 @@ final class SlimAppConsoleRunner
                 new SlimAppConsoleUserCreateCommand(),
                 new SlimAppConsoleUserModifyCommand(),
                 new SlimAppConsoleUserDeleteCommand(),
+                new SlimAppConsoleUserTokenCommand(),
             ]
         );
 

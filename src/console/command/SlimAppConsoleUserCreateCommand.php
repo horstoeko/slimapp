@@ -6,6 +6,7 @@ namespace horstoeko\slimapp\console\command;
 
 use horstoeko\stringmanagement\StringUtils;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputDefinition;
 
 class SlimAppConsoleUserCreateCommand extends SlimAppConsoleBasicExtCommand
@@ -21,11 +22,12 @@ class SlimAppConsoleUserCreateCommand extends SlimAppConsoleBasicExtCommand
             ->setDefinition(
                 new InputDefinition(
                     [
-                        new InputOption("username", "u", InputOption::VALUE_REQUIRED, "The user to authenticate at host"),
+                        new InputArgument("username", InputArgument::REQUIRED, "The user to authenticate at host"),
                         new InputOption("password", "p", InputOption::VALUE_REQUIRED, "The password to authenticate at host"),
                         new InputOption("firstname", "f", InputOption::VALUE_REQUIRED, "The first name of the user"),
                         new InputOption("lastname", "l", InputOption::VALUE_REQUIRED, "The last name of the user"),
                         new InputOption("email", "e", InputOption::VALUE_REQUIRED, "The e-mail address of the user"),
+                        new InputOption("token", "t", InputOption::VALUE_OPTIONAL, "The user specific token for API access"),
                     ]
                 )
             );
@@ -38,11 +40,12 @@ class SlimAppConsoleUserCreateCommand extends SlimAppConsoleBasicExtCommand
     {
         // Init variables
 
-        $username = (string)$this->input->getOption('username');
+        $username = (string)$this->input->getArgument('username');
         $password = (string)$this->input->getOption('password');
         $firstname = (string)$this->input->getOption('firstname');
         $lastname = (string)$this->input->getOption('lastname');
         $email = (string)$this->input->getOption('email');
+        $token = (string)$this->input->getOption('token');
 
         // Check
 
@@ -80,7 +83,8 @@ class SlimAppConsoleUserCreateCommand extends SlimAppConsoleBasicExtCommand
             $password,
             $firstname,
             $lastname,
-            $email
+            $email,
+            $token
         );
 
         // Finished

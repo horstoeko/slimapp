@@ -7,6 +7,7 @@ use horstoeko\slimapp\middleware\SlimAppMiddlewareIpAddress;
 use horstoeko\slimapp\middleware\SlimAppMiddlewareLocale;
 use horstoeko\slimapp\middleware\SlimAppMiddlewareRestrictedRouteAdmin;
 use horstoeko\slimapp\middleware\SlimAppMiddlewareRestrictedRouteLight;
+use horstoeko\slimapp\middleware\SlimAppMiddlewareTokenAuth;
 use horstoeko\slimapp\middleware\SlimAppMiddlewareValidation;
 use horstoeko\slimapp\security\SlimAppLoginManager;
 use horstoeko\slimapp\system\SlimAppDirectories;
@@ -293,6 +294,23 @@ return [
             $loginManager,
             $app->getResponseFactory(),
             $basicAuthSettings
+        );
+
+        return $basicAuthMiddleware;
+    },
+
+    SlimAppMiddlewareTokenAuth::class => function (
+        ContainerInterface $c,
+        SlimAppLoginManager $loginManager,
+        \Slim\App $app
+    ) {
+        $settings = $c->get('settings');
+        $tokenAuthSettings = $settings['tokenauth'] ?? [];
+
+        $basicAuthMiddleware = new SlimAppMiddlewareTokenAuth(
+            $loginManager,
+            $app->getResponseFactory(),
+            $tokenAuthSettings
         );
 
         return $basicAuthMiddleware;

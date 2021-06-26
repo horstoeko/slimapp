@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace horstoeko\slimapp\console\command;
 
 use horstoeko\stringmanagement\StringUtils;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputDefinition;
 
@@ -21,11 +22,12 @@ class SlimAppConsoleUserModifyCommand extends SlimAppConsoleBasicExtCommand
             ->setDefinition(
                 new InputDefinition(
                     [
-                        new InputOption("username", "u", InputOption::VALUE_REQUIRED, "The user to authenticate at host"),
+                        new InputArgument("username", InputArgument::REQUIRED, "The user to authenticate at host"),
                         new InputOption("password", "p", InputOption::VALUE_REQUIRED, "The password to authenticate at host"),
                         new InputOption("firstname", "f", InputOption::VALUE_REQUIRED, "The first name of the user"),
                         new InputOption("lastname", "l", InputOption::VALUE_REQUIRED, "The last name of the user"),
                         new InputOption("email", "e", InputOption::VALUE_REQUIRED, "The e-mail address of the user"),
+                        new InputOption("token", "t", InputOption::VALUE_REQUIRED, "The user specific token for API access"),
                     ]
                 )
             );
@@ -38,11 +40,12 @@ class SlimAppConsoleUserModifyCommand extends SlimAppConsoleBasicExtCommand
     {
         // Init variables
 
-        $username = (string)$this->input->getOption('username');
+        $username = (string)$this->input->getArgument('username');
         $password = (string)$this->input->getOption('password');
         $firstname = (string)$this->input->getOption('firstname');
         $lastname = (string)$this->input->getOption('lastname');
         $email = (string)$this->input->getOption('email');
+        $token = (string)$this->input->getOption('token');
 
         // Check
 
@@ -53,14 +56,15 @@ class SlimAppConsoleUserModifyCommand extends SlimAppConsoleBasicExtCommand
 
         // Create the user
 
-        $this->writelnNormal(sprintf("Now creating user %s...", $username));
+        $this->writelnNormal(sprintf("Now updating user %s...", $username));
 
         $userId = $this->loginManager->modifyUser(
             $username,
             $password,
             $firstname,
             $lastname,
-            $email
+            $email,
+            $token
         );
 
         // Finished
