@@ -9,7 +9,7 @@ use horstoeko\slimapp\console\helper\SlimAppConsoleContainerHelper;
 use horstoeko\slimapp\console\helper\SlimAppConsoleApplicationHelper;
 use horstoeko\slimapp\console\command\SlimAppConsoleRoutesListCommand;
 use horstoeko\slimapp\console\helper\SlimAppConsoleCoreApplicationHelper;
-use horstoeko\slimapp\console\command\SlimAppConsoleShowDirectoriesCommand;
+use horstoeko\slimapp\console\command\SlimAppConsoleDirectoriesListCommand;
 use Psr\Container\ContainerInterface;
 
 final class SlimAppConsoleRunner
@@ -76,7 +76,7 @@ final class SlimAppConsoleRunner
         $cli->addCommands(
             [
                 new SlimAppConsoleRoutesListCommand(),
-                new SlimAppConsoleShowDirectoriesCommand(),
+                new SlimAppConsoleDirectoriesListCommand(),
             ]
         );
 

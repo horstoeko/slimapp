@@ -8,7 +8,7 @@
     ],
     "description": "Simple slim framework based application",
     "homepage": "https://github.com/horstoeko/slimapp",
-    "type": "package",
+    "type": "project",
     "license": "MIT",
     "prefer-stable": true,
     "authors": [
