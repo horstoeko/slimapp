@@ -31,6 +31,8 @@ class User extends Eloquent
         'firstname',
         'lastname',
         'email',
+        'admin',
+        'token',
     ];
 
     /**

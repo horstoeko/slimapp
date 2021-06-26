@@ -2,13 +2,10 @@
 
 namespace horstoeko\slimapp\console\command;
 
-use horstoeko\slimapp\system\SlimAppDirectories;
-use horstoeko\stringmanagement\StringUtils;
+use \horstoeko\stringmanagement\StringUtils;
 use \Symfony\Component\Console\Helper\Table;
-use \Symfony\Component\Console\Input\InputInterface;
-use \Symfony\Component\Console\Output\OutputInterface;
 
-class SlimAppConsoleDirectoriesListCommand extends SlimAppConsoleBasicCommand
+class SlimAppConsoleDirectoriesListCommand extends SlimAppConsoleBasicExtCommand
 {
     /**
      * @inheritDoc
@@ -23,11 +20,10 @@ class SlimAppConsoleDirectoriesListCommand extends SlimAppConsoleBasicCommand
     /**
      * @inheritDoc
      */
-    protected function doexecute(InputInterface $input, OutputInterface $output)
+    protected function doexecutecommand(): int
     {
-        $table = new Table($output);
-        $routes = $this->slimAppCoreApplication->getRouteCollector()->getRoutes();
-        $directories = new SlimAppDirectories;
+        $table = new Table($this->output);
+        $directories = $this->directories;
 
         $table->setHeaders(['Which', 'Path', 'Exists']);
         $table->addRow(

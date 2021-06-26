@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace horstoeko\slimapp\security;
 
-use horstoeko\slimapp\crypt\SlimAppQuickEncryption;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use horstoeko\slimapp\baseapp\models\User as UserModel;
+use horstoeko\stringmanagement\StringUtils;
 use SlimSession\Helper as SessionHelper;
 
 class SlimAppLoginManager
@@ -60,6 +60,35 @@ class SlimAppLoginManager
         }
 
         if ($userData->password != $password) {
+            return false;
+        }
+
+        $this->sessionHelper->set(self::SESSION_LOGINFLAG, true);
+        $this->sessionHelper->set(self::SESSION_LOGINUSERID, $userData->id);
+        $this->sessionHelper->set(self::SESSION_LOGINUSERNAME, $userData->username);
+        $this->sessionHelper->set(self::SESSION_LOGINFIRSTNAME, $userData->firstname);
+        $this->sessionHelper->set(self::SESSION_LOGINLASTNAME, $userData->lastname);
+        $this->sessionHelper->set(self::SESSION_LOGINADMIN, $userData->admin);
+        $this->sessionHelper->set(self::SESSION_LOGINEMAIL, $userData->email);
+
+        return true;
+    }
+
+    /**
+     * Perform login by a token
+     *
+     * @param string $token
+     * @return boolean
+     */
+    public function loginUserByToken(string $token): bool
+    {
+        if ($this->isSignedIn()) {
+            $this->logoutUser();
+        }
+
+        $userData = UserModel::where("token", "=", $token)->first();
+
+        if (!$userData) {
             return false;
         }
 
@@ -183,17 +212,13 @@ class SlimAppLoginManager
             return (int)$userData->id;
         }
 
-        $dbValues = [
-            'username' => $username,
-            'password' => $password,
-            'firstname' => $firstname,
-            'lastname' => $lastname,
-            'email' => $email,
-        ];
-
-        UserModel::create($dbValues);
-
-        $userData = UserModel::where("username", "=", $username)->first();
+        $userData = new UserModel();
+        $userData->username = $username;
+        $userData->password = $password;
+        $userData->firstname = $firstname;
+        $userData->lastname = $lastname;
+        $userData->email = $email;
+        $userData->save();
 
         return (int)$userData->id;
     }
@@ -221,14 +246,20 @@ class SlimAppLoginManager
             return -1;
         }
 
-        $dbValues = [
-            'password' => $password,
-            'firstname' => $firstname,
-            'lastname' => $lastname,
-            'email' => $email,
-        ];
+        if (!StringUtils::stringIsNullOrEmpty($password)) {
+            $userData->password = $password;
+        }
+        if (!StringUtils::stringIsNullOrEmpty($firstname)) {
+            $userData->firstname = $firstname;
+        }
+        if (!StringUtils::stringIsNullOrEmpty($lastname)) {
+            $userData->lastname = $lastname;
+        }
+        if (!StringUtils::stringIsNullOrEmpty($email)) {
+            $userData->email = $email;
+        }
 
-        $userData->update($dbValues);
+        $userData->update();
 
         return (int)$userData->id;
     }

@@ -3,10 +3,8 @@
 namespace horstoeko\slimapp\console\command;
 
 use \Symfony\Component\Console\Helper\Table;
-use \Symfony\Component\Console\Input\InputInterface;
-use \Symfony\Component\Console\Output\OutputInterface;
 
-class SlimAppConsoleRoutesListCommand extends SlimAppConsoleBasicCommand
+class SlimAppConsoleRoutesListCommand extends SlimAppConsoleBasicExtCommand
 {
     /**
      * @inheritDoc
@@ -21,9 +19,9 @@ class SlimAppConsoleRoutesListCommand extends SlimAppConsoleBasicCommand
     /**
      * @inheritDoc
      */
-    protected function doexecute(InputInterface $input, OutputInterface $output)
+    protected function doexecutecommand(): int
     {
-        $table = new Table($output);
+        $table = new Table($this->output);
         $routes = $this->slimAppCoreApplication->getRouteCollector()->getRoutes();
 
         $table->setHeaders(['Method', 'Pattern', 'Name']);

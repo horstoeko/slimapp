@@ -16,6 +16,7 @@ class Initialization extends AbstractMigration
             ->addColumn('lastname', 'string', ['default' => '', 'length' => 1024])
             ->addColumn('email', 'string', ['default' => '', 'length' => 1024])
             ->addColumn('admin', 'tinyinteger', ['default' => 0, 'length' => 4])
+            ->addColumn('token', 'string', ['default' => '', 'length' => 1024])
             ->create();
     }
 
