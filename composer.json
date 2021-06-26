@@ -75,6 +75,18 @@
         "theseer/phpdox": "^0"
     },
     "scripts": {
+        "post-create-project-cmd": [
+            "php -r \"@mkdir('./var');\"",
+            "php -r \"@mkdir('./var/twig');\"",
+            "php -r \"@mkdir('./var/log');\"",
+            "php -r \"@mkdir('./var/ssl');\"",
+            "php -r \"@mkdir('./app');\"",
+            "php -r \"@mkdir('./app/action');\"",
+            "php -r \"@mkdir('./app/html');\"",
+            "php -r \"@mkdir('./app/models');\"",
+            "php -r \"@mkdir('./etc');\"",
+            "php -r \"if (file_exists('./phoenix.json') == false) { copy('./vendor/horstoeko/slimapp/src/dbmigrations/phoenix.json.dist','./phoenix.json'); }\""
+        ], 
         "tests": "./vendor/bin/phpunit ./tests/",
         "phpcs": "./vendor/bin/phpcs --standard=./build/phpcsrules.xml --extensions=php --ignore=autoload.php ./src",
         "phpcs2": "./vendor/bin/phpcs --standard=PSR2 --extensions=php --ignore=autoload.php ./src",
