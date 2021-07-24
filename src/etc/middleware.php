@@ -7,7 +7,7 @@ use Slim\Middleware\Session as SessionMiddleware;
 use horstoeko\slimapp\middleware\SlimAppMiddlewareLocale;
 
 return [
-    SessionMiddleware::class,
-    SlimAppMiddlewareIpAddress::class,
-    SlimAppMiddlewareLocale::class,
+    SessionMiddleware::class => SessionMiddleware::class,
+    SlimAppMiddlewareIpAddress::class => SlimAppMiddlewareIpAddress::class,
+    SlimAppMiddlewareLocale::class => SlimAppMiddlewareLocale::class,
 ];
